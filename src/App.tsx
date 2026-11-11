@@ -456,7 +456,7 @@ export function App() {
     return <FileCard>
         <Header
             title="Greedy Algorithms"
-            intro="Lecture notes and four interactive exercises. Every check runs in the browser - no server, no AI."
+            intro="Lecture notes and four interactive exercises."
         />
 
         <Group label="Opening" heading="What is a greedy algorithm?">
