@@ -1,7 +1,7 @@
 # Algorithms course site
 
-Private repository for the Algorithms course website of Elina Benenson Opalinsky.
-Nothing here is published to students.
+Public source of the Algorithms course website of Elina Benenson Opalinsky,
+served by GitHub Pages.
 
 ## What's here
 
@@ -37,4 +37,5 @@ Interactive exercises (all checks run in the browser, no server, no AI):
 
 ## Status
 
-Private review sample. Repository private; GitHub Pages not enabled.
+Live at https://argeliben77.github.io/algorithms-course-site/ - public site,
+served by GitHub Pages from this repository (branch `main`, root).
