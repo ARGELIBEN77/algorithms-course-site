@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Greedy Algorithms</title>
+<title>Greedy Algorithms | Lecture Companion</title>
+<link rel="stylesheet" href="learning.css">
 <style>
 :root {
   --page: #fdfcfb;
@@ -180,11 +181,11 @@ li { margin: 6px 0; }
   <div class="group">
     <div class="glabel">Opening</div>
     <h2>What is a greedy algorithm?</h2>
-    <p>A greedy algorithm solves an optimization problem.</p>
+    <p>A greedy algorithm builds a solution by repeatedly making a choice that looks best at the current step. This strategy is efficient in many problems, but a locally attractive choice is <strong>not automatically</strong> part of a globally optimal solution.</p>
     <ul>
-      <li>Optimal substructure: an optimal solution contains in it optimal solutions to subproblems.</li>
-      <li>Greedy strategy: at each decision point, do what looks best "locally". A top-down structure: with each step, reduce the problem to a smaller problem.</li>
-      <li>Greedy choice property: "locally best" = globally best.</li>
+      <li><strong>Greedy-choice property:</strong> there is an optimal solution that includes the locally optimal choice. This must be established for the particular problem.</li>
+      <li><strong>Optimal substructure:</strong> after a safe choice, an optimal solution to the remaining subproblem can be combined with that choice to produce an optimal solution.</li>
+      <li><strong>Proof of correctness:</strong> explain why committing to the choice is safe, often by exchanging a choice in an optimal solution for the greedy one.</li>
     </ul>
   </div>
 
@@ -206,7 +207,7 @@ while n &gt; 0 {
       </div>
       <p class="caption">38 shekels = 10 + 10 + 10 + 5 + 2 + 1 - six coins, the greedy way.</p>
     </figure>
-    <div class="callout"><div class="callout-title">Think about it</div>Can you think of an example where greedy is not optimal?</div>
+    <div class="callout"><div class="callout-title">Think about it</div>Does choosing the largest possible coin always minimize the coin count, for <em>every</em> set of denominations? Find a counterexample.</div>
   </div>
 
   <div class="group">
@@ -215,18 +216,16 @@ while n &gt; 0 {
     <p>A knapsack can contain a certain weight C of goods. Under this capacity constraint, maximize the total value of the goods you put in.</p>
     <p>Example: candy NIS 50 for 10 kilos, chocolate NIS 40 for 5 kilos, ice cream NIS 30 for 5 kilos. If C = 14 kilos, what would you do?</p>
     <p>Formally: given G1, G2, ..., Gn, each Gi with weight wi and value vi, let fi (0 ≤ fi ≤ 1) be the fraction of Gi taken. Maximize the total value subject to the total weight not exceeding C. A choice of fractions that respects the capacity is a feasible solution; one of maximum value is an optimal solution.</p>
-    <pre class="pseudo">S &lt;- set of all vi / wi
-while C &gt; 0 {
-    i &lt;- index of maximum value in S
-    S &lt;- S - {vi / wi}
-    if (wi &lt; C) {
-        take wi kilos of item i
-        C &lt;- C - wi
-    } else {
-        take C kilos of item i
-        C &lt;- 0
-    }
-}</pre>
+    <pre class="pseudo">sort items by decreasing v[i] / w[i]   // assume w[i] &gt; 0
+value &lt;- 0
+for each item i in this order {
+    if C = 0: break
+    amount &lt;- min(w[i], C)
+    value &lt;- value + amount * (v[i] / w[i])
+    C &lt;- C - amount
+}
+return value</pre>
+    <p class="caption">Sorting takes O(n log n) time; scanning the sorted items takes O(n). This ratio rule is optimal for fractional knapsack, not necessarily for 0/1 knapsack.</p>
   </div>
 
   <div class="group">
@@ -280,6 +279,7 @@ while C &gt; 0 {
 6.         then A &lt;- A ∪ {i}
 7.              j &lt;- i
 8. return A</pre>
+    <p class="caption">Preconditions: activities are sorted by nondecreasing finish time, and n ≥ 1. If there are no activities, return the empty set. If sorting is needed, total time is O(n log n); scanning a sorted list takes O(n).</p>
     <figure class="diagram">
       <div class="tl" id="static-tl"></div>
       <p class="caption">The example activities sorted by increasing finish time. Greedy selects a1, a4, a8, a11. Example adapted from slides by Igor Nor.</p>
@@ -297,9 +297,9 @@ while C &gt; 0 {
     <div class="glabel">Why it works</div>
     <h2>Optimality of activity selection</h2>
     <p class="key">Theorem: Greedy-Activity-Selector is optimal.</p>
-    <p>Loop invariant: before iteration i we hold a feasible solution for activities 1, ..., i-1 with (1) |A| maximal and (2) j minimal for this |A|. The invariant is proven by induction on i; the base case i = 2, |A| = 1, j = 1 is trivial.</p>
-    <p>Maximality: assume a set Bi with |Bi| &gt; |Ai|. If ai ∉ Bi, then Bi is an optimal solution for {1...i-1}, contradicting (1). Otherwise ai ∈ Bi and ai ∉ Ai; but if greedy did not select ai, it is because ai overlapped the last activity in {1...i-1}, contradicting (2).</p>
-    <p>Minimal j (earliest finish time): assume a set Bi with |Bi| = |Ai| whose last activity finishes earlier. ai ∈ Bi is impossible (then j would be maximal, contradicting (2)); otherwise Bi is optimal for {1...i-1}, where Ai-1 is already optimal with minimal j - a contradiction.</p>
+    <p><strong>Exchange argument.</strong> Let g be the compatible activity that finishes earliest. Consider an optimal schedule O, and let b be its first activity. Because g finishes no later than b, we have f(g) ≤ f(b). Replacing b with g does not make any later activity incompatible: every later activity started at or after f(b), hence also at or after f(g). Therefore there exists an optimal schedule that starts with g.</p>
+    <p><strong>Reduce the problem.</strong> Once g is chosen, the remaining candidates are precisely the activities starting at or after f(g). The rest of the optimal schedule must be optimal for that subproblem; otherwise we could improve the original schedule. Repeating this argument proves that earliest-finish-first produces a maximum-size compatible set.</p>
+    <div class="mini-task"><p><strong>Think during the lecture:</strong> Why does the same exchange argument fail if activities have different weights? Which sentence would no longer justify optimality?</p></div>
   </div>
 
   <div class="group">
@@ -338,7 +338,7 @@ while C &gt; 0 {
     <details class="practice-reveal"><summary>Hint</summary><p>Two sorted lists</p></details>
     <button type="button" class="btn btn-secondary sol-toggle" data-sol="sol-platforms">Show solution</button>
     <div class="sol" id="sol-platforms" hidden>
-    <p>Sort A and D, then walk the day with two indices: when the next arrival is earlier than the next departure, a train enters (curr grows); otherwise a train leaves (curr shrinks). The peak of curr is the answer.</p>
+    <p>Assume every train arrives before it departs, and a platform can be reused immediately when a departure and arrival have the same time. Sort the arrival and departure times separately; scan them in order, processing departures first on a tie. Increase the active-train count on an arrival, decrease it on a departure, and return the maximum count.</p>
     <pre class="pseudo">MinPlatforms(A[0..n-1], D[0..n-1]):
     sort(A); sort(D)          // ascending
     i &lt;- 0; j &lt;- 0
@@ -383,7 +383,7 @@ while C &gt; 0 {
 </article>
 </div>
 
-  <p class="closing">Elina Benenson Opalinsky. Based on slides by Prof. Dana Shapira and Dr Igor Nor.</p>
+  <p class="closing">Elina Benenson Opalinsky. Based on slides by Prof. Dana Shapira and Dr Igor Nor. This interactive page is a companion to classroom teaching.</p>
 
 </div>
 
@@ -896,5 +896,6 @@ renderAg();
 renderTree();
 renderDl();
 </script>
+<script src="learning.js"></script>
 </body>
 </html>
