@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Interactive lecture companion for algorithms: explore topics, examples, visualizations, and exercises.">
+  <meta name="description" content="Algorithms lecture companion organized by algorithmic paradigms, graph algorithms, string matching, and network flows.">
   <title>Algorithms | Interactive Lecture Companion</title>
   <link rel="stylesheet" href="site.css">
 </head>
@@ -15,74 +15,172 @@
         <span class="brand-mark" aria-hidden="true">A</span>
         <span>Algorithms</span>
       </a>
-      <span class="topbar-note">Interactive lecture companion</span>
+      <span class="topbar-note">Lecture companion · Course 8500016</span>
     </div>
   </header>
 
   <main id="main">
     <section class="container hero" aria-labelledby="hero-title">
       <p class="eyebrow">Algorithms · Explore by topic</p>
-      <h1 id="hero-title">Think. Experiment. Understand.</h1>
-      <p class="lead">An interactive companion to the algorithms lectures. Explore worked examples, test ideas with visual activities, and practice explaining why an algorithm works — or why it fails.</p>
+      <h1 id="hero-title">Algorithms, topic by topic.</h1>
+      <p class="lead">A lecture companion for learning to design algorithms, justify correctness, and analyze efficiency. Explore examples, experiment with interactive activities, and practice reasoning beyond the lecture.</p>
       <div class="hero-actions">
-        <a class="primary-link" href="#topics">Explore topics</a>
-        <a class="understated-link" href="topics/greedy.html">Continue to Greedy Algorithms</a>
+        <a class="primary-link" href="#topics">Browse the topics</a>
+        <a class="understated-link" href="topics/greedy.html">Start with Greedy Algorithms</a>
       </div>
-      <div class="hero-stats" aria-label="Available learning material">
-        <div class="stat"><strong>1</strong><span>topic ready</span></div>
-        <div class="stat"><strong>4</strong><span>interactive activities</span></div>
-        <div class="stat"><strong>5</strong><span>guided units in Greedy</span></div>
+      <div class="hero-stats" aria-label="Course organization">
+        <div class="stat"><strong>4</strong><span>subject areas</span></div>
+        <div class="stat"><strong>15</strong><span>subtopics listed</span></div>
+        <div class="stat"><strong>1</strong><span>interactive topic ready</span></div>
       </div>
     </section>
 
     <section class="container section" id="topics" aria-labelledby="topics-title">
       <div class="section-heading">
         <div>
-          <p class="eyebrow">Course topics</p>
-          <h2 id="topics-title">Choose a topic</h2>
-          <p>Every topic has its own page, with explanations, interactive exploration, and practice. Greedy Algorithms is available now; the other topics below are proposed placeholders until the course syllabus is confirmed.</p>
+          <p class="eyebrow">Course map</p>
+          <h2 id="topics-title">Explore the syllabus</h2>
+          <p>The four subject areas below follow the official Algorithms syllabus. Only Greedy Algorithms has a complete interactive page so far; other pages will be added as the material is developed.</p>
         </div>
-        <span class="count">1 ready · 5 proposed</span>
+        <span class="count">1 available · 14 upcoming</span>
       </div>
-      <div class="topics-grid">
-        <a class="topic-card featured" href="topics/greedy.html">
-          <div class="card-top"><span class="card-category">Algorithm design</span><span class="tag">Ready to explore</span></div>
-          <h3>Greedy Algorithms</h3>
-          <p>Make a local choice, compare it with the global optimum, and discover when greedy strategies work. Includes coin change, knapsack, activity selection, counterexamples, and independent practice.</p>
-          <div class="card-bottom">Explore Greedy Algorithms →</div>
-        </a>
-        <article class="topic-card" aria-label="Divide and Conquer: proposed topic">
-          <div class="card-top"><span class="card-category">Algorithm design</span><span class="tag soon">Proposed</span></div>
-          <h3>Divide and Conquer</h3>
-          <p>Subproblems, recursion trees, and combining partial solutions.</p>
-          <div class="card-bottom placeholder">Content not added yet</div>
-        </article>
-        <article class="topic-card" aria-label="Dynamic Programming: proposed topic">
-          <div class="card-top"><span class="card-category">Algorithm design</span><span class="tag soon">Proposed</span></div>
-          <h3>Dynamic Programming</h3>
-          <p>Overlapping subproblems, states, and building optimal solutions.</p>
-          <div class="card-bottom placeholder">Content not added yet</div>
-        </article>
-        <article class="topic-card" aria-label="Sorting and Searching: proposed topic">
-          <div class="card-top"><span class="card-category">Core algorithms</span><span class="tag soon">Proposed</span></div>
-          <h3>Sorting and Searching</h3>
-          <p>Compare strategies, traces, correctness, and complexity.</p>
-          <div class="card-bottom placeholder">Content not added yet</div>
-        </article>
-        <article class="topic-card" aria-label="Graph Algorithms: proposed topic">
-          <div class="card-top"><span class="card-category">Core algorithms</span><span class="tag soon">Proposed</span></div>
-          <h3>Graph Algorithms</h3>
-          <p>Graph traversal and optimization problems.</p>
-          <div class="card-bottom placeholder">Content not added yet</div>
-        </article>
-        <article class="topic-card" aria-label="Algorithm Analysis: proposed topic">
-          <div class="card-top"><span class="card-category">Foundations</span><span class="tag soon">Proposed</span></div>
-          <h3>Algorithm Analysis</h3>
-          <p>Running time, asymptotic notation, and reasoning about efficiency.</p>
-          <div class="card-bottom placeholder">Content not added yet</div>
-        </article>
-      </div>
-      <p class="section-note"><strong>Note:</strong> The proposed topics are navigation placeholders, not claims about the official syllabus. They can be renamed, reordered, replaced, or removed.</p>
+      <nav class="subject-nav" aria-label="Jump to subject area">
+        <a href="#paradigms">Algorithmic paradigms</a>
+        <a href="#graphs">Graph algorithms</a>
+        <a href="#strings">String matching</a>
+        <a href="#flows">Network flows</a>
+      </nav>
+
+      <section class="subject-section" id="paradigms" aria-labelledby="paradigms-title">
+        <div class="subject-heading">
+          <div><span class="subject-number">01 / 04</span><h3 id="paradigms-title">Algorithmic paradigms</h3>
+            <p>Different strategies for building efficient, correct algorithms.</p></div>
+          <span class="subject-count">3 topics</span>
+        </div>
+        <div class="topics-grid">
+          <a class="topic-card featured" href="topics/greedy.html">
+            <div class="card-top"><span class="card-category">Greedy choice</span><span class="tag">Available</span></div>
+            <h4>Greedy Algorithms</h4>
+            <p>Explore local versus global choices with coins, knapsack, activity selection, and counterexamples.</p>
+            <div class="card-bottom">Open interactive topic →</div>
+          </a>
+          <article class="topic-card">
+            <div class="card-top"><span class="card-category">Divide and conquer</span><span class="tag soon">Coming later</span></div>
+            <h4>Divide and Conquer</h4>
+            <p>Split a problem into smaller parts, solve them, and combine the results.</p>
+            <div class="card-bottom placeholder">Topic page not added yet</div>
+          </article>
+          <article class="topic-card">
+            <div class="card-top"><span class="card-category">Optimal subproblems</span><span class="tag soon">Coming later</span></div>
+            <h4>Dynamic Programming</h4>
+            <p>Recognize reusable subproblems and develop a systematic solution.</p>
+            <div class="card-bottom placeholder">Topic page not added yet</div>
+          </article>
+        </div>
+      </section>
+
+      <section class="subject-section" id="graphs" aria-labelledby="graphs-title">
+        <div class="subject-heading">
+          <div><span class="subject-number">02 / 04</span><h3 id="graphs-title">Graph algorithms</h3>
+            <p>Represent, traverse, and optimize graphs.</p></div>
+          <span class="subject-count">5 topics</span>
+        </div>
+        <div class="topics-grid">
+          <article class="topic-card">
+            <div class="card-top"><span class="card-category">Graph foundations</span><span class="tag soon">Coming later</span></div>
+            <h4>Graph Representations &amp; BFS/DFS</h4>
+            <p>Represent graphs and investigate breadth-first and depth-first exploration.</p>
+            <div class="card-bottom placeholder">Topic page not added yet</div>
+          </article>
+          <article class="topic-card">
+            <div class="card-top"><span class="card-category">Directed graphs</span><span class="tag soon">Coming later</span></div>
+            <h4>Topological Sorting</h4>
+            <p>Order vertices of a directed acyclic graph according to dependencies.</p>
+            <div class="card-bottom placeholder">Topic page not added yet</div>
+          </article>
+          <article class="topic-card">
+            <div class="card-top"><span class="card-category">Directed graphs</span><span class="tag soon">Coming later</span></div>
+            <h4>Strongly Connected Components</h4>
+            <p>Recognize strongly connected regions of directed graphs.</p>
+            <div class="card-bottom placeholder">Topic page not added yet</div>
+          </article>
+          <article class="topic-card">
+            <div class="card-top"><span class="card-category">Graph optimization</span><span class="tag soon">Coming later</span></div>
+            <h4>Minimum Spanning Trees</h4>
+            <p>Connect weighted graph vertices at minimum total edge cost.</p>
+            <div class="card-bottom placeholder">Topic page not added yet</div>
+          </article>
+          <article class="topic-card">
+            <div class="card-top"><span class="card-category">Graph optimization</span><span class="tag soon">Coming later</span></div>
+            <h4>Shortest Paths</h4>
+            <p>Study shortest paths from a single source and between all pairs of vertices.</p>
+            <div class="card-bottom placeholder">Topic page not added yet</div>
+          </article>
+        </div>
+      </section>
+
+      <section class="subject-section" id="strings" aria-labelledby="strings-title">
+        <div class="subject-heading">
+          <div><span class="subject-number">03 / 04</span><h3 id="strings-title">String matching</h3>
+            <p>Match text efficiently and explore indexing methods.</p></div>
+          <span class="subject-count">3 topics</span>
+        </div>
+        <div class="topics-grid">
+          <article class="topic-card">
+            <div class="card-top"><span class="card-category">Pattern matching</span><span class="tag soon">Coming later</span></div>
+            <h4>KMP</h4>
+            <p>Use prefix information to avoid unnecessary comparisons.</p>
+            <div class="card-bottom placeholder">Topic page not added yet</div>
+          </article>
+          <article class="topic-card">
+            <div class="card-top"><span class="card-category">Pattern matching</span><span class="tag soon">Coming later</span></div>
+            <h4>Rabin–Karp</h4>
+            <p>Use rolling hashes to identify candidate matches.</p>
+            <div class="card-bottom placeholder">Topic page not added yet</div>
+          </article>
+          <article class="topic-card">
+            <div class="card-top"><span class="card-category">Text search</span><span class="tag soon">Coming later</span></div>
+            <h4>Indexing Methods</h4>
+            <p>Explore data structures and techniques that support efficient searching.</p>
+            <div class="card-bottom placeholder">Topic page not added yet</div>
+          </article>
+        </div>
+      </section>
+
+      <section class="subject-section" id="flows" aria-labelledby="flows-title">
+        <div class="subject-heading">
+          <div><span class="subject-number">04 / 04</span><h3 id="flows-title">Network flows</h3>
+            <p>Model optimization problems with capacities, cuts, and reductions.</p></div>
+          <span class="subject-count">4 topics</span>
+        </div>
+        <div class="topics-grid">
+          <article class="topic-card">
+            <div class="card-top"><span class="card-category">Flow fundamentals</span><span class="tag soon">Coming later</span></div>
+            <h4>Network Flow</h4>
+            <p>Model capacity constraints and feasible flows in networks.</p>
+            <div class="card-bottom placeholder">Topic page not added yet</div>
+          </article>
+          <article class="topic-card">
+            <div class="card-top"><span class="card-category">Flow and cuts</span><span class="tag soon">Coming later</span></div>
+            <h4>Minimum Cuts</h4>
+            <p>Study how cuts constrain the amount of flow through a network.</p>
+            <div class="card-bottom placeholder">Topic page not added yet</div>
+          </article>
+          <article class="topic-card">
+            <div class="card-top"><span class="card-category">Applications</span><span class="tag soon">Coming later</span></div>
+            <h4>Matching</h4>
+            <p>Model matching problems using flow networks.</p>
+            <div class="card-bottom placeholder">Topic page not added yet</div>
+          </article>
+          <article class="topic-card">
+            <div class="card-top"><span class="card-category">Applications</span><span class="tag soon">Coming later</span></div>
+            <h4>Reductions to Flow</h4>
+            <p>Translate other problems into network-flow instances.</p>
+            <div class="card-bottom placeholder">Topic page not added yet</div>
+          </article>
+        </div>
+      </section>
+      <p class="section-note">Topic names and grouping follow the syllabus. The number of planned pages and the breakdown within each subject area are editorial decisions for this website.</p>
     </section>
 
     <div class="usage">
@@ -90,16 +188,19 @@
         <p class="eyebrow">How to use this site</p>
         <h2 id="use-title">Designed to support the lecture</h2>
         <div class="steps">
-          <div class="step"><small>01 · Before class</small><h3>Preview</h3><p>Skim the examples and identify the questions you want to discuss.</p></div>
-          <div class="step"><small>02 · During class</small><h3>Experiment</h3><p>Try the interactive activities and predict what each algorithm will do.</p></div>
-          <div class="step"><small>03 · After class</small><h3>Explain</h3><p>Complete short knowledge checks and practice justifying an algorithm or finding a counterexample.</p></div>
+          <div class="step"><small>01 · Before class</small><h3>Preview</h3><p>Skim the worked examples and identify questions to explore.</p></div>
+          <div class="step"><small>02 · During class</small><h3>Experiment</h3><p>Use interactive activities to predict and discuss algorithm behavior.</p></div>
+          <div class="step"><small>03 · After class</small><h3>Explain</h3><p>Answer checkpoints, attempt exercises, and justify correctness or find counterexamples.</p></div>
         </div>
       </section>
     </div>
   </main>
 
   <footer class="container footer">
-    <div class="footer-inner"><span>Elina Benenson Opalinsky</span><span>Lecture companion · Content expands topic by topic</span></div>
+    <div class="footer-inner">
+      <span>Dr. Elina Benenson Opalinsky · Algorithms, Course 8500016</span>
+      <span>Lecture companion · Material expands topic by topic</span>
+    </div>
   </footer>
 </body>
 </html>
