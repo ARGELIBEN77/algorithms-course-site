@@ -5,15 +5,12 @@ served by GitHub Pages.
 
 ## What's here
 
-**Unit 3: Greedy Algorithms - sample page.** Lecture notes and two interactive
-exercises from the Unit 3 deck (אלגוריתמים - יחידה 3 אלגוריתמים חמדניים,
-5 Nov 2026), in the deck's order and with its examples. Based on slides by
+**Greedy Algorithms.** Lecture notes and interactive exercises. Based on slides by
 Prof. Dana Shapira and Dr Igor Nor.
 
 - `index.html` - the working page. Self-contained (no build, no server):
   open it in any browser and everything runs, including the exercises.
-- `src/` - the authoring source the reviewed sample was built from
-  (React + the Instinct Files kit; kept here as the editable original).
+- `src/` - the editable authoring source.
 
 ## The page
 
