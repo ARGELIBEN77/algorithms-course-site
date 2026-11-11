@@ -455,9 +455,8 @@ function ActivityGame() {
 export function App() {
     return <FileCard>
         <Header
-            title="Unit 3: Greedy Algorithms"
-            fact="Private sample"
-            intro="Lecture notes and two interactive exercises from the Unit 3 deck, in the deck's order and with its examples. Every check runs in the browser - no server, no AI. Nothing here is published to students."
+            title="Greedy Algorithms"
+            intro="Lecture notes and four interactive exercises. Every check runs in the browser - no server, no AI."
         />
 
         <Group label="Opening" heading="What is a greedy algorithm?">
@@ -595,6 +594,6 @@ while C > 0 {
             <Caption>Example: A = [2.00, 2.10, 3.00, 3.20, 3.50, 5.00], D = [2.30, 3.20, 3.55, 4.00, 4.30, 5.20] after sorting. The peak is 3 platforms.</Caption>
         </Group>
 
-        <Closing>Elina Benenson Opalinsky. Based on slides by Prof. Dana Shapira and Dr Igor Nor. Notes follow the deck "אלגוריתמים - יחידה 3 אלגוריתמים חמדניים" of 5 Nov 2026. Private review sample - not published to students.</Closing>
+        <Closing>Elina Benenson Opalinsky. Based on slides by Prof. Dana Shapira and Dr Igor Nor.</Closing>
     </FileCard>;
 }
