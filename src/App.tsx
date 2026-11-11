@@ -567,13 +567,17 @@ while C > 0 {
 
         <Group label="Practice" heading="Four greedy exercises">
             <Text>
-                <Heading sub="Sort, then refuel">The refueling scheduling problem</Heading>
+                <Heading>The refueling scheduling problem</Heading>
+                <details className="practice-reveal"><summary>Hint</summary><p>Sort, then refuel</p></details>
                 <Paragraph>N cars wait to refuel; car i takes Timei. Choose the refueling order so the total waiting time of all cars is minimal. Solution: sort by non-decreasing refueling time and refuel in that order, in Θ(n log n). Correctness by exchange: swapping two consecutive cars with times a &gt; b leaves the other cars unchanged and decreases the pair's combined waiting time by a - b, so repeating brings the sorted order without increasing the total.</Paragraph>
-                <Heading sub="Small coefficients first">The polynomial coefficients problem</Heading>
+                <Heading>The polynomial coefficients problem</Heading>
+                <details className="practice-reveal"><summary>Hint</summary><p>Small coefficients first</p></details>
                 <Paragraph>Given an array A of n natural numbers A0..An-1 and X &gt; 1, order the elements so the polynomial A0 + A1X + ... + An-1X^(n-1) is maximal. Solution: sort the array in ascending order, in Θ(n log n). Greedy choice: in an optimal solution A0 is the lowest value - swapping it with a smaller Amin at index i increases the value, since X &gt; 1. Optimal substructure: the rest of an optimal ordering is optimal for the polynomial starting from X.</Paragraph>
-                <Heading sub="Pair the expensive ones">Sale at Reuben's kiosk</Heading>
+                <Heading>Sale at Reuben's kiosk</Heading>
+                <details className="practice-reveal"><summary>Hint</summary><p>Pair the expensive ones</p></details>
                 <Paragraph>A sale gives the cheaper product of every pair for free. After choosing 2n products, pair them so the total paid is minimal. Solution: sort the prices x1 ≥ x2 ≥ ... ≥ x2n and pair adjacent products, in Θ(n log n). Exchange argument: replacing the pairs of x1 and x2 with (x1, x2) and their partners never costs more, so some optimal pairing contains (x1, x2); remove it and repeat.</Paragraph>
-                <Heading sub="Two sorted lists">Minimum number of open platforms at a train station</Heading>
+                <Heading>Minimum number of open platforms at a train station</Heading>
+                <details className="practice-reveal"><summary>Hint</summary><p>Two sorted lists</p></details>
                 <Paragraph>Given arrays A of arrival times and D of departure times, find the minimum number of platforms needed so no train waits. Sort A and D, then walk the day with two indices: when the next arrival is earlier than the next departure, a train enters (curr grows); otherwise a train leaves (curr shrinks). The peak of curr is the answer.</Paragraph>
             </Text>
             <Pseudo>{`MinPlatforms(A[0..n-1], D[0..n-1]):
@@ -593,6 +597,31 @@ while C > 0 {
             <TrainPlatformsDiagram />
             <Caption>Example: A = [2.00, 2.10, 3.00, 3.20, 3.50, 5.00], D = [2.30, 3.20, 3.55, 4.00, 4.30, 5.20] after sorting. The peak is 3 platforms.</Caption>
         </Group>
+
+
+<div className="group" id="additional-practice">
+<div className="glabel">More practice</div>
+<h2>Try it yourself</h2>
+<p>Try each problem before opening the hints. The worked solution is available when you want to compare your reasoning.</p>
+<article className="practice-exercise" aria-labelledby="extra-title-1">
+<h3 id="extra-title-1">Find a counterexample</h3>
+<p>You have unlimited coins worth 1, 3 and 4. Make 6 using the fewest coins.</p>
+<ol><li>What does "take the largest coin that fits" produce?</li><li>Can you do better?</li><li>What does this show about the rule?</li></ol>
+<details className="practice-reveal"><summary>Hint 1</summary><p>After taking 4, how much remains?</p></details><details className="practice-reveal"><summary>Hint 2</summary><p>Try a solution that does not use 4.</p></details><details className="practice-reveal"><summary>Worked solution</summary><p>Greedy chooses 4 + 1 + 1: three coins. Choosing 3 + 3 uses two coins. Two is optimal because no single available coin is worth 6.</p><p>This counterexample proves that largest-first does not always minimize the number of coins for denominations 1, 3 and 4. It does not mean that every greedy algorithm fails.</p></details>
+</article>
+<article className="practice-exercise" aria-labelledby="extra-title-2">
+<h3 id="extra-title-2">Choose an order and justify it</h3>
+<p>Three cars are waiting at time 0. Refueling takes 8, 2 and 5 minutes, and only one car can refuel at a time.</p>
+<ol><li>Choose an order that minimizes total waiting time before refueling starts.</li><li>Calculate that total.</li><li>Explain why swapping two neighbouring cars supports your rule.</li></ol>
+<details className="practice-reveal"><summary>Hint 1</summary><p>Write the three waiting times for your order.</p></details><details className="practice-reveal"><summary>Hint 2</summary><p>Compare two neighbouring cars taking a and b minutes. What happens if the longer one goes second?</p></details><details className="practice-reveal"><summary>Worked solution</summary><p>Order: 2, 5, 8. Waiting times: 0, 2, 7. Total waiting time: 9 minutes.</p><p>For adjacent cars with a &gt; b and common starting time T, their combined waiting time changes from T + (T + a) to T + (T + b): a decrease of a - b. Later cars start at the same time because a + b is unchanged. Removing every such inversion gives non-decreasing refueling times without increasing total waiting time. Sorting takes O(n log n) time.</p></details>
+</article>
+<article className="practice-exercise" aria-labelledby="extra-title-3">
+<h3 id="extra-title-3">Compare two greedy rules</h3>
+<p>Activities: A=[0,6), B=[1,3), C=[3,5), D=[5,7). An activity may start exactly when another ends.</p>
+<ol><li>Select activities using earliest start first.</li><li>Repeat using earliest finish first.</li><li>Which result is optimal here? Explain.</li><li>Does this example alone prove a rule always works?</li></ol>
+<details className="practice-reveal"><summary>Hint 1</summary><p>After choosing A, which other activities still fit?</p></details><details className="practice-reveal"><summary>Hint 2</summary><p>Try omitting A.</p></details><details className="practice-reveal"><summary>Worked solution</summary><p>Earliest start first chooses only A. Earliest finish first chooses B, C, D: three activities.</p><p>Three is optimal for this input: the only fourth activity is A, which overlaps all three. This is a counterexample to earliest start first. It is not, by itself, a proof that earliest finish first always works. Successful examples do not cover every input; one counterexample is enough to refute an always claim.</p></details>
+</article>
+</div>
 
         <Closing>Elina Benenson Opalinsky. Based on slides by Prof. Dana Shapira and Dr Igor Nor.</Closing>
     </FileCard>;
