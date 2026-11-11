@@ -82,3 +82,45 @@ a.topic-card:hover{box-shadow:var(--shadow);border-color:#b7cdc6;transform:trans
  .topic-card{transition:none}
  a.topic-card:hover{transform:none}
 }
+
+/* Syllabus-aligned subject groups and compact topic catalog. */
+.subject-nav {
+ display:flex;gap:8px;flex-wrap:wrap;margin:3px 0 22px;
+}
+.subject-nav a {
+ display:inline-flex;align-items:center;min-height:38px;
+ border:1px solid var(--border);border-radius:999px;
+ background:#fff;color:var(--ink2);text-decoration:none;
+ font-size:13px;font-weight:650;padding:7px 13px;
+}
+.subject-nav a:hover {border-color:#91baad;color:var(--teal);background:#f4f9f6}
+.subject-section {padding:31px 0 40px;border-bottom:1px solid var(--border);scroll-margin-top:20px}
+.subject-section:last-of-type {border-bottom:0}
+.subject-heading {display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:18px}
+.subject-number {font-size:12px;letter-spacing:.09em;color:var(--teal);font-weight:800}
+.subject-heading h3 {font:500 clamp(27px,3.3vw,34px)/1.23 Georgia,"Times New Roman",serif;letter-spacing:-.025em;margin:4px 0 4px}
+.subject-heading p {font-size:14px;color:var(--ink2);margin:0}
+.subject-count {font-size:12px;color:var(--ink3);white-space:nowrap;padding-bottom:5px}
+.subject-section .topics-grid {grid-template-columns:repeat(3,minmax(0,1fr))}
+.subject-section .topic-card {min-height:218px;padding:22px}
+.subject-section .topic-card.featured {grid-column:span 1}
+.subject-section .topic-card h4 {font:500 23px/1.25 Georgia,"Times New Roman",serif;letter-spacing:-.018em;margin:8px 0 0}
+.subject-section .topic-card p {font-size:13.5px}
+.subject-section .card-category {font-size:10.5px;letter-spacing:.07em}
+.subject-section .tag {font-size:11px}
+.subject-section .card-top {align-items:start}
+@media (max-width:850px) {
+ .subject-section .topics-grid {grid-template-columns:repeat(2,minmax(0,1fr))}
+ .subject-section .topic-card.featured {grid-column:span 1}
+}
+@media (max-width:600px) {
+ .subject-section {padding:24px 0 29px}
+ .subject-section .topics-grid {grid-template-columns:1fr}
+ .subject-heading {align-items:start;gap:8px}
+ .subject-heading h3 {font-size:27px}
+ .subject-heading p {max-width:270px}
+ .subject-section .topic-card {min-height:190px;padding:20px}
+ .subject-section .topic-card h4 {font-size:24px}
+ .subject-nav {flex-wrap:nowrap;overflow-x:auto;padding-bottom:8px;scrollbar-width:thin}
+ .subject-nav a {white-space:nowrap;flex:0 0 auto}
+}
