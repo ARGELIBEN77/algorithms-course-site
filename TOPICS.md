@@ -1,27 +1,39 @@
-# Algorithms: topic-based lecture companion
+# Algorithms 8500016 — lecture companion
 
-The root `index.html` is the **course-level topic hub**. It must not become a single-topic page again.
+This is a **multi-topic website**, not a single-page Greedy Algorithms site. The site follows the syllabus file **אלגוריתמים.pdf (תשפ"ז, סמסטר א)** supplied by the lecturer.
 
-## Structure
-- `index.html` + `site.css`: course homepage and topic catalog.
-- `topics/greedy.html`: complete Greedy Algorithms content migrated intact from the original site; it uses `learning.css`, `learning.js`, and `topic-shell.css`.
-- `topics/_template.html`: starting point for each **new** topic page.
-- `learning.js`: progressive learning path specific to Greedy Algorithms. Do not include it in unrelated topic pages until the logic is made configurable.
+## Course-level navigation
 
-## Adding a topic
-1. Copy `topics/_template.html` to `topics/<topic-slug>.html`.
-2. Adapt the goals, worked examples, interactive activities, hints, and worked solutions to the actual lecture.
-3. Add a normal link card to `index.html` only when the topic has finished, reviewed material.
-4. If a proposed topic is not in the course syllabus, remove or rename its placeholder in `index.html`.
-5. Update any topic count on the homepage after adding/removing topics.
+The root `index.html` is the Algorithms homepage. It displays **four official syllabus subject areas**:
 
-## Editorial principles
-- The site is a companion to the lecture, not a self-paced replacement course.
-- Preserve technical accuracy and mathematical assumptions.
-- Interactive choices should elicit predictions and reasoning, not just clicks.
-- Show solutions progressively; keep counterexamples separate from proofs.
-- All topic pages include an accessible link back to the hub.
+1. **Algorithmic paradigms**: Greedy Algorithms, Divide and Conquer, Dynamic Programming.
+2. **Graph algorithms**: Graph representations and BFS/DFS; topological sorting; strongly connected components; minimum spanning trees; shortest paths (single-source and all-pairs).
+3. **String matching**: KMP, Rabin–Karp, indexing methods.
+4. **Network flows**: Network flow, minimum cuts, matching, reductions to the flow problem.
 
-The five proposed homepage slots (Divide and Conquer, Dynamic Programming,
-Sorting and Searching, Graph Algorithms, Algorithm Analysis) are **unconfirmed**.
-They do not indicate the official course syllabus and have no active links.
+The homepage groups these 15 items into topical cards as a **website design choice**; the syllabus does not prescribe one separate page per item or the exact breakdown of the cards.
+
+**Only Greedy Algorithms is live within this draft.** The other cards are plain, unlinked placeholders marked "Coming later"; they must not imply completed content.
+
+## Files
+
+- `index.html`, `site.css`: multi-topic course homepage.
+- `topics/greedy.html`: interactive Greedy Algorithms unit with the existing games and exercises.
+- `learning.js`, `learning.css`: **Greedy-specific** guided units and progress; do not attach to unrelated pages without first generalizing.
+- `topic-shell.css`: shared breadcrumb style.
+- `topics/_template.html`: template for future subject pages.
+
+## Adding another topic page
+
+1. Confirm the precise subtopic, outline, examples, and algorithms with the lecturer's lecture materials.
+2. Copy `topics/_template.html` to `topics/<slug>.html` and author a full page.
+3. Include definitions, examples, correctness reasoning, complexity, interactive activity when useful, practice and progressive hints.
+4. Replace the matching homepage placeholder `<article>` with a valid `<a href="topics/<slug>.html">` card, and update availability labels and counts.
+5. Check keyboard navigation, phone layout, accessible content, internal links and calculations before publishing.
+
+## Teaching intent
+
+- A **lecture companion**, not a replacement for the lecturer or a full LMS.
+- Encourage prediction, experimentation, justification and transfer to new problems.
+- Show assumptions and complexity clearly. Distinguish working examples from formal proofs.
+- Keep public site updates behind review. Do not publish unreviewed syllabus changes.
