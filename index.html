@@ -1,900 +1,202 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Greedy Algorithms</title>
-<style>
-:root {
-  --page: #fdfcfb;
-  --ink: #4d3533;
-  --ink2: rgba(77, 53, 51, 0.7);
-  --ink3: rgba(77, 53, 51, 0.5);
-  --ink4: rgba(77, 53, 51, 0.2);
-  --hairline: rgba(77, 53, 51, 0.1);
-  --raised: #f6f2ef;
-  --teal: #73a89a;
-  --teal-dark: #3f6f63;
-  --red: #ed313e;
-}
-html, body { margin: 0; }
-body {
-  background: var(--page);
-  color: var(--ink);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  font-size: 15px;
-  line-height: 1.6;
-}
-.card { max-width: 720px; margin: 0 auto; padding: 28px 20px 48px; }
-
-h1 { font-family: Georgia, "Times New Roman", serif; font-weight: 500; font-size: 30px; margin: 0 0 6px; }
-.fact { font-size: 13px; color: var(--ink3); margin: 0 0 10px; }
-.intro { color: var(--ink2); margin: 0 0 8px; }
-
-.group { margin: 40px 0 0; }
-.glabel { font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink3); margin-bottom: 2px; }
-h2 { font-family: Georgia, "Times New Roman", serif; font-weight: 500; font-size: 24px; margin: 0 0 14px; }
-h3 { font-size: 16px; font-weight: 700; margin: 26px 0 2px; }
-h3 .sub { display: block; font-size: 13px; font-weight: 500; color: var(--ink2); margin-top: 2px; }
-p { margin: 12px 0; }
-ul { margin: 12px 0; padding-left: 22px; }
-li { margin: 6px 0; }
-
-.key { font-weight: 600; border-left: 3px solid var(--teal); padding-left: 12px; margin: 14px 0; }
-.caption { font-size: 13px; line-height: 1.5; color: var(--ink2); margin: 8px 0 0; }
-.callout { background: var(--raised); border-radius: 10px; padding: 12px 14px; margin: 16px 0; }
-.callout-title { font-weight: 600; margin-bottom: 2px; }
-.closing { margin-top: 44px; font-size: 13px; color: var(--ink3); }
-
-.pseudo {
-  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  font-size: 13px;
-  line-height: 1.55;
-  background: #fff;
-  border: 1px solid var(--hairline);
-  border-radius: 8px;
-  padding: 12px 14px;
-  margin: 12px 0;
-  overflow-x: auto;
-  white-space: pre;
-}
-
-.feedback { font-size: 14px; line-height: 22px; padding: 10px 12px; border-radius: 8px; margin: 12px 0; }
-.feedback-good { background: rgba(115, 168, 154, 0.14); color: var(--teal-dark); }
-.feedback-bad { background: rgba(237, 49, 62, 0.08); color: var(--red); }
-.feedback-info { background: var(--raised); color: var(--ink2); }
-
-.btn {
-  font: inherit;
-  font-size: 14px;
-  border-radius: 8px;
-  padding: 7px 14px;
-  cursor: pointer;
-  border: 1px solid transparent;
-  background: none;
-  color: var(--ink);
-}
-.btn:disabled { opacity: 0.45; cursor: default; }
-.btn-primary { background: var(--ink); color: #fdfcfb; }
-.btn-secondary { border-color: var(--ink4); }
-.btn-secondary.selected { background: var(--ink); color: #fdfcfb; border-color: var(--ink); }
-.btn-ghost { color: var(--ink2); }
-.btn-ghost:hover { background: var(--raised); }
-
-.choice-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 10px 0; }
-.choice-label { font-size: 13px; font-weight: 600; color: var(--ink2); margin-right: 2px; }
-.choice-btn { font: inherit; font-size: 14px; padding: 7px 14px; border-radius: 8px; border: 1px solid var(--ink4); background: #fff; color: var(--ink); cursor: pointer; }
-.choice-btn.on { background: var(--teal); border-color: var(--teal); color: #fff; }
-
-.game { margin: 4px 0 8px; }
-.game > * + * { margin-top: 10px; }
-
-/* knapsack game */
-.kb-items { display: flex; flex-direction: column; gap: 6px; }
-.kb-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-.kb-facts { font-size: 13px; line-height: 18px; color: var(--ink2); }
-.kb-bar { height: 10px; border-radius: 5px; background: var(--hairline); overflow: hidden; }
-.kb-fill { height: 100%; border-radius: 5px; background: var(--teal); transition: width 0.25s ease; }
-
-/* activity timeline */
-.tl { display: flex; flex-direction: column; gap: 2px; }
-.tl-row {
-  display: flex; align-items: center; gap: 8px; width: 100%;
-  min-height: 34px; padding: 4px 2px; background: none; border: none; border-radius: 6px;
-  cursor: pointer; font: inherit; text-align: left;
-}
-.tl-row:hover { background: rgba(115, 168, 154, 0.08); }
-.tl-label { flex: 0 0 30px; font-size: 13px; font-weight: 600; color: var(--ink); }
-.tl-track { position: relative; flex: 1 1 auto; height: 20px; }
-.tl-bar { position: absolute; top: 4px; height: 12px; border-radius: 3px; background: var(--ink4); }
-.tl-sel .tl-bar { background: var(--teal); }
-.tl-sel .tl-label { color: var(--teal); }
-.tl-line { position: absolute; top: 0; bottom: 0; border-left: 2px dotted var(--teal); }
-.tl-times { flex: 0 0 44px; font-size: 12px; color: var(--ink2); text-align: right; }
-.tl-axis { display: flex; align-items: center; gap: 8px; padding: 0 2px; }
-.tl-axis-track { height: 18px; }
-.tl-tick { position: absolute; top: 2px; transform: translateX(-50%); font-size: 11px; color: var(--ink2); }
-.tl-static { cursor: default; min-height: 26px; }
-.tl-static:hover { background: none; }
-
-/* walkthrough + free play */
-.pc { padding: 6px; }
-.pc-line { display: block; padding: 2px 8px; border-radius: 6px; }
-.pc-on { background: rgba(115, 168, 154, 0.16); box-shadow: inset 2px 0 0 var(--teal); }
-.pc-controls { display: flex; gap: 8px; flex-wrap: wrap; }
-.tl-cur .tl-bar { background: #d9a441; }
-.tl-cur .tl-label { color: #b07f23; }
-.tl-skip .tl-bar { opacity: 0.35; }
-.tl-skip .tl-label { opacity: 0.55; }
-
-/* solution reveals */
-.sol-toggle { margin: 4px 0; }
-.sol { margin-top: 4px; }
-
-/* tree game */
-.tree-pick { cursor: pointer; }
-.tree-pick circle { stroke: var(--teal-dark); stroke-dasharray: 4 3; }
-.tree-pick:hover circle { stroke-width: 3; }
-
-/* deadlines game */
-.dl-order { display: flex; flex-direction: column; gap: 6px; margin: 8px 0; }
-.dl-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-.dl-pos { flex: 0 0 22px; font-size: 13px; font-weight: 700; color: var(--ink3); }
-
-/* diagrams */
-.diagram { margin: 14px 0 6px; }
-.diagram-svg { display: block; width: 100%; max-width: 340px; height: auto; margin: 6px auto 2px; }
-.diagram-wide { max-width: 460px; }
-
-.coins { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 6px 0 10px; }
-.coin {
-  width: 46px; height: 46px; border-radius: 50%;
-  border: 2px solid var(--teal); color: var(--ink);
-  display: inline-flex; align-items: center; justify-content: center;
-  font-size: 16px; font-weight: 600;
-}
-
-.kbc-row { display: flex; align-items: center; gap: 10px; margin: 8px 0; }
-.kbc-label { flex: 0 0 78px; font-size: 13px; font-weight: 600; color: var(--ink); }
-.kbc-bar { flex: 1 1 auto; display: flex; height: 30px; border-radius: 6px; overflow: hidden; border: 1px solid var(--hairline); }
-.kbc-seg { display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; white-space: nowrap; overflow: hidden; }
-.kbc-item { background: rgba(115, 168, 154, 0.28); color: var(--teal-dark); border-right: 1px solid #fff; }
-.kbc-part { background: rgba(115, 168, 154, 0.14); }
-.kbc-empty { background: var(--raised); color: var(--ink2); font-weight: 400; }
-.kbc-value { flex: 0 0 64px; font-size: 13px; font-weight: 600; color: var(--ink); text-align: right; }
-.kbc-good { color: var(--teal-dark); }
-
-.practice-exercise { margin: 24px 0; padding: 0 0 20px; border-bottom: 1px solid var(--hairline); }
-.practice-reveal { margin: 10px 0; padding: 10px 14px; border: 1px solid var(--ink4); border-radius: 8px; }
-.practice-reveal summary { cursor: pointer; font-weight: 600; min-height: 24px; }
-.practice-reveal[open] { background: var(--raised); }
-.practice-exercise ol { padding-left: 22px; }
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Algorithms: interactive examples, algorithm analysis, correctness arguments, and exercises organized by topic.">
+  <title>Algorithms | Interactive Lecture Companion</title>
+  <link rel="stylesheet" href="site.css">
 </head>
 <body>
-<div class="card">
+  <a href="#main" class="skip-link">Skip to content</a>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="index.html" aria-label="Algorithms homepage">
+        <span class="brand-mark" aria-hidden="true">A</span>
+        <span>Algorithms</span>
+      </a>
+      <span class="topbar-note">Algorithms · Lecture companion</span>
+    </div>
+  </header>
 
-  <h1>Greedy Algorithms</h1>
-  <p class="intro">Lecture notes and four interactive exercises.</p>
-
-  <div class="group">
-    <div class="glabel">Opening</div>
-    <h2>What is a greedy algorithm?</h2>
-    <p>A greedy algorithm solves an optimization problem.</p>
-    <ul>
-      <li>Optimal substructure: an optimal solution contains in it optimal solutions to subproblems.</li>
-      <li>Greedy strategy: at each decision point, do what looks best "locally". A top-down structure: with each step, reduce the problem to a smaller problem.</li>
-      <li>Greedy choice property: "locally best" = globally best.</li>
-    </ul>
-  </div>
-
-  <div class="group">
-    <div class="glabel">First example</div>
-    <h2>Coin change</h2>
-    <p>Problem: give change for n Shekels using the minimum number of coins. Coins: 1, 2, 5 and 10 shekels. Example: n = 38 shekels.</p>
-    <pre class="pseudo">S &lt;- set of all coins
-A &lt;- 0              // number of used coins
-while n &gt; 0 {
-    C &lt;- maximum coin in S
-    A &lt;- A + floor(n / C)
-    n &lt;- n - floor(n / C) * C
-    S &lt;- S - {C}
-}</pre>
-    <figure class="diagram">
-      <div class="coins">
-        <span class="coin">10</span><span class="coin">10</span><span class="coin">10</span><span class="coin">5</span><span class="coin">2</span><span class="coin">1</span>
+  <main id="main">
+    <section class="container hero" aria-labelledby="hero-title">
+      <p class="eyebrow">Topics</p>
+      <h1 id="hero-title">Algorithms</h1>
+      <p class="lead">Interactive notes and exercises in algorithm design. For each problem: define the input and objective, construct an algorithm, justify correctness, and analyze its running time.</p>
+      <div class="hero-actions">
+        <a class="primary-link" href="#topics">Topics</a>
+        <a class="understated-link" href="topics/greedy.html">Greedy Algorithms</a>
       </div>
-      <p class="caption">38 shekels = 10 + 10 + 10 + 5 + 2 + 1 - six coins, the greedy way.</p>
-    </figure>
-    <div class="callout"><div class="callout-title">Think about it</div>Can you think of an example where greedy is not optimal?</div>
-  </div>
+      
+    </section>
 
-  <div class="group">
-    <div class="glabel">Second example</div>
-    <h2>The fractional knapsack problem</h2>
-    <p>A knapsack can contain a certain weight C of goods. Under this capacity constraint, maximize the total value of the goods you put in.</p>
-    <p>Example: candy NIS 50 for 10 kilos, chocolate NIS 40 for 5 kilos, ice cream NIS 30 for 5 kilos. If C = 14 kilos, what would you do?</p>
-    <p>Formally: given G1, G2, ..., Gn, each Gi with weight wi and value vi, let fi (0 ≤ fi ≤ 1) be the fraction of Gi taken. Maximize the total value subject to the total weight not exceeding C. A choice of fractions that respects the capacity is a feasible solution; one of maximum value is an optimal solution.</p>
-    <pre class="pseudo">S &lt;- set of all vi / wi
-while C &gt; 0 {
-    i &lt;- index of maximum value in S
-    S &lt;- S - {vi / wi}
-    if (wi &lt; C) {
-        take wi kilos of item i
-        C &lt;- C - wi
-    } else {
-        take C kilos of item i
-        C &lt;- 0
-    }
-}</pre>
-  </div>
-
-  <div class="group">
-    <div class="glabel">Same story, whole items</div>
-    <h2>The integer knapsack problem</h2>
-    <p>Same input, but this time fi ∈ {0, 1} - you cannot cut goods in the middle.</p>
-    <p>Example: item1 is 10 kg worth NIS 60, item2 is 20 kg worth NIS 100, item3 is 30 kg worth NIS 120, and the knapsack holds 50 kg.</p>
-    <figure class="diagram">
-      <div class="kbc-row">
-        <span class="kbc-label">Fractional</span>
-        <div class="kbc-bar">
-          <span class="kbc-seg kbc-item" style="width:20%">item1</span>
-          <span class="kbc-seg kbc-item" style="width:40%">item2</span>
-          <span class="kbc-seg kbc-item kbc-part" style="width:40%">2/3 item3</span>
+    <section class="container section" id="topics" aria-labelledby="topics-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Contents</p>
+          <h2 id="topics-title">Topics</h2>
+          <p>Select a topic to open its notes, visualizations, and exercises. Greedy Algorithms is currently available.</p>
         </div>
-        <span class="kbc-value kbc-good">NIS 240</span>
+        <span class="count"></span>
       </div>
-      <div class="kbc-row">
-        <span class="kbc-label">Whole items</span>
-        <div class="kbc-bar">
-          <span class="kbc-seg kbc-item" style="width:20%">item1</span>
-          <span class="kbc-seg kbc-item" style="width:40%">item2</span>
-          <span class="kbc-seg kbc-empty" style="width:40%">unused</span>
+      <nav class="subject-nav" aria-label="Jump to subject area">
+        <a href="#paradigms">Algorithmic paradigms</a>
+        <a href="#graphs">Graph algorithms</a>
+        <a href="#strings">String matching</a>
+        <a href="#flows">Network flows</a>
+      </nav>
+
+      <section class="subject-section" id="paradigms" aria-labelledby="paradigms-title">
+        <div class="subject-heading">
+          <div><span class="subject-number">01 / 04</span><h3 id="paradigms-title">Algorithmic paradigms</h3>
+            <p>Different strategies for building efficient, correct algorithms.</p></div>
+          <span class="subject-count">3 topics</span>
         </div>
-        <span class="kbc-value">NIS 160</span>
-      </div>
-      <p class="caption">The highest-ratio rule fills all 50 kg when goods can be cut (NIS 240). With whole items it takes item1 + item2 and leaves 20 kg unused (NIS 160) - and item2 + item3 would give NIS 220.</p>
-    </figure>
-    <div class="callout"><div class="callout-title">Think about it</div>Can you think of an example where greedy is not optimal?</div>
-  </div>
+        <div class="topics-grid">
+          <a class="topic-card featured" href="topics/greedy.html">
+            <div class="card-top"><span class="card-category">Greedy choice</span><span class="tag">Available</span></div>
+            <h4>Greedy Algorithms</h4>
+            <p>Explore local versus global choices with coins, knapsack, activity selection, and counterexamples.</p>
+            <div class="card-bottom">Open interactive topic →</div>
+          </a>
+          <article class="topic-card">
+            <div class="card-top"><span class="card-category">Divide and conquer</span></div>
+            <h4>Divide and Conquer</h4>
+            <p>Split a problem into smaller parts, solve them, and combine the results.</p>
+            
+          </article>
+          <article class="topic-card">
+            <div class="card-top"><span class="card-category">Optimal subproblems</span></div>
+            <h4>Dynamic Programming</h4>
+            <p>Recognize reusable subproblems and develop a systematic solution.</p>
+            
+          </article>
+        </div>
+      </section>
 
-  <div class="group">
-    <div class="glabel">Try it</div>
-    <h2>Game: same knapsack, two games</h2>
-    <p class="key">Fill the knapsack twice: once cutting goods freely, once taking whole items. Watch where the greedy rule works and where it fails.</p>
-    <div class="game" id="kb-game"></div>
-    <p class="caption">Fractional: the highest value/weight rule works, NIS 240. Whole items: the same rule may fail.</p>
-  </div>
+      <section class="subject-section" id="graphs" aria-labelledby="graphs-title">
+        <div class="subject-heading">
+          <div><span class="subject-number">02 / 04</span><h3 id="graphs-title">Graph algorithms</h3>
+            <p>Represent, traverse, and optimize graphs.</p></div>
+          <span class="subject-count">5 topics</span>
+        </div>
+        <div class="topics-grid">
+          <article class="topic-card">
+            <div class="card-top"><span class="card-category">Graph foundations</span></div>
+            <h4>Graph Representations &amp; BFS/DFS</h4>
+            <p>Represent graphs and investigate breadth-first and depth-first exploration.</p>
+            
+          </article>
+          <article class="topic-card">
+            <div class="card-top"><span class="card-category">Directed graphs</span></div>
+            <h4>Topological Sorting</h4>
+            <p>Order vertices of a directed acyclic graph according to dependencies.</p>
+            
+          </article>
+          <article class="topic-card">
+            <div class="card-top"><span class="card-category">Directed graphs</span></div>
+            <h4>Strongly Connected Components</h4>
+            <p>Recognize strongly connected regions of directed graphs.</p>
+            
+          </article>
+          <article class="topic-card">
+            <div class="card-top"><span class="card-category">Graph optimization</span></div>
+            <h4>Minimum Spanning Trees</h4>
+            <p>Connect weighted graph vertices at minimum total edge cost.</p>
+            
+          </article>
+          <article class="topic-card">
+            <div class="card-top"><span class="card-category">Graph optimization</span></div>
+            <h4>Shortest Paths</h4>
+            <p>Study shortest paths from a single source and between all pairs of vertices.</p>
+            
+          </article>
+        </div>
+      </section>
 
-  <div class="group">
-    <div class="glabel">Third example</div>
-    <h2>Activity selection</h2>
-    <p>Problem: given S = {1, 2, ..., n} of n activities, each activity i with start time si and finish time fi (si &lt; fi). Activities i and j are compatible if they do not overlap. Objective: select a maximum-sized set of mutually compatible activities.</p>
-    <p>Solution: order the activities by increasing finishing time, f1 ≤ f2 ≤ ... ≤ fn.</p>
-    <pre class="pseudo">Greedy-Activity-Selector(s, f)
-1. n &lt;- length(s)
-2. A &lt;- {1}      // selected activities
-3. j &lt;- 1        // last selected
-4. for i = 2 to n
-5.     if si &gt;= fj
-6.         then A &lt;- A ∪ {i}
-7.              j &lt;- i
-8. return A</pre>
-    <figure class="diagram">
-      <div class="tl" id="static-tl"></div>
-      <p class="caption">The example activities sorted by increasing finish time. Greedy selects a1, a4, a8, a11. Example adapted from slides by Igor Nor.</p>
-    </figure>
-  </div>
+      <section class="subject-section" id="strings" aria-labelledby="strings-title">
+        <div class="subject-heading">
+          <div><span class="subject-number">03 / 04</span><h3 id="strings-title">String matching</h3>
+            <p>Match text efficiently and explore indexing methods.</p></div>
+          <span class="subject-count">3 topics</span>
+        </div>
+        <div class="topics-grid">
+          <article class="topic-card">
+            <div class="card-top"><span class="card-category">Pattern matching</span></div>
+            <h4>KMP</h4>
+            <p>Use prefix information to avoid unnecessary comparisons.</p>
+            
+          </article>
+          <article class="topic-card">
+            <div class="card-top"><span class="card-category">Pattern matching</span></div>
+            <h4>Rabin–Karp</h4>
+            <p>Use rolling hashes to identify candidate matches.</p>
+            
+          </article>
+          <article class="topic-card">
+            <div class="card-top"><span class="card-category">Text search</span></div>
+            <h4>Indexing Methods</h4>
+            <p>Explore data structures and techniques that support efficient searching.</p>
+            
+          </article>
+        </div>
+      </section>
 
-  <div class="group">
-    <div class="glabel">Try it</div>
-    <h2>Game: build the greedy schedule</h2>
-    <div class="game" id="act-game"></div>
-    <p class="caption">Example adapted from slides by Igor Nor.</p>
-  </div>
+      <section class="subject-section" id="flows" aria-labelledby="flows-title">
+        <div class="subject-heading">
+          <div><span class="subject-number">04 / 04</span><h3 id="flows-title">Network flows</h3>
+            <p>Model optimization problems with capacities, cuts, and reductions.</p></div>
+          <span class="subject-count">4 topics</span>
+        </div>
+        <div class="topics-grid">
+          <article class="topic-card">
+            <div class="card-top"><span class="card-category">Flow fundamentals</span></div>
+            <h4>Network Flow</h4>
+            <p>Model capacity constraints and feasible flows in networks.</p>
+            
+          </article>
+          <article class="topic-card">
+            <div class="card-top"><span class="card-category">Flow and cuts</span></div>
+            <h4>Minimum Cuts</h4>
+            <p>Study how cuts constrain the amount of flow through a network.</p>
+            
+          </article>
+          <article class="topic-card">
+            <div class="card-top"><span class="card-category">Applications</span></div>
+            <h4>Matching</h4>
+            <p>Model matching problems using flow networks.</p>
+            
+          </article>
+          <article class="topic-card">
+            <div class="card-top"><span class="card-category">Applications</span></div>
+            <h4>Reductions to Flow</h4>
+            <p>Translate other problems into network-flow instances.</p>
+            
+          </article>
+        </div>
+      </section>
+      <p class="section-note">Additional topics will be linked as their materials are completed.</p>
+    </section>
 
-  <div class="group">
-    <div class="glabel">Why it works</div>
-    <h2>Optimality of activity selection</h2>
-    <p class="key">Theorem: Greedy-Activity-Selector is optimal.</p>
-    <p>Loop invariant: before iteration i we hold a feasible solution for activities 1, ..., i-1 with (1) |A| maximal and (2) j minimal for this |A|. The invariant is proven by induction on i; the base case i = 2, |A| = 1, j = 1 is trivial.</p>
-    <p>Maximality: assume a set Bi with |Bi| &gt; |Ai|. If ai ∉ Bi, then Bi is an optimal solution for {1...i-1}, contradicting (1). Otherwise ai ∈ Bi and ai ∉ Ai; but if greedy did not select ai, it is because ai overlapped the last activity in {1...i-1}, contradicting (2).</p>
-    <p>Minimal j (earliest finish time): assume a set Bi with |Bi| = |Ai| whose last activity finishes earlier. ai ∈ Bi is impossible (then j would be maximal, contradicting (2)); otherwise Bi is optimal for {1...i-1}, where Ai-1 is already optimal with minimal j - a contradiction.</p>
-  </div>
-
-  <div class="group">
-    <div class="glabel">Knowing the limits</div>
-    <h2>Where greedy fails</h2>
-    <h3>Weighted activity selection<span class="sub">Same goal, new constraint</span></h3>
-    <p>Now each activity also has a weight wi, and we want to maximize the sum of weights. With all weights equal, earliest finish first works. With different weights it may fail: greedy takes three light activities, the best possible count, but if one heavy activity outweighs all three together, the weighted optimum is that activity alone.</p>
-    <h3>A small tree example<span class="sub">Heaviest path</span></h3>
-    <p>Task: find the heaviest path from the root to a leaf. Greedy rule: at each node, take the heavier child. Greedy gets 20 → 3 → 1 = 24, while the optimum is 20 → 2 → 10 = 32. Local best is not always global best - we must know when greedy works.</p>
-    <div class="game" id="tree-game"></div>
-    <h3>Tasks with deadlines<span class="sub">Exercise</span></h3>
-    <p>All tasks are available at time 0; each task i has a duration di and a deadline ti, and tasks are performed one at a time. The delay of a task is how long after its deadline it finishes (0 if on time). Proposed rule: at each step, perform the shortest remaining task. Does it guarantee the smallest possible maximum delay?</p>
-    <div class="game" id="dl-game"></div>
-  </div>
-
-  <div class="group">
-    <div class="glabel">Practice</div>
-    <h2>Four greedy exercises</h2>
-    <h3>The refueling scheduling problem</h3>
-    <p>N cars wait to refuel; car i takes Timei. Choose the refueling order so the total waiting time of all cars is minimal.</p>
-    <details class="practice-reveal"><summary>Hint</summary><p>Sort, then refuel</p></details>
-    <button type="button" class="btn btn-secondary sol-toggle" data-sol="sol-refuel">Show solution</button>
-    <div class="sol" id="sol-refuel" hidden><p>Solution: sort by non-decreasing refueling time and refuel in that order, in Θ(n log n). Correctness by exchange: swapping two consecutive cars with times a &gt; b leaves the other cars unchanged and decreases the pair's combined waiting time by a - b, so repeating brings the sorted order without increasing the total.</p></div>
-    <h3>The polynomial coefficients problem</h3>
-    <p>Given an array A of n natural numbers A0..An-1 and X &gt; 1, order the elements so the polynomial A0 + A1X + ... + An-1X^(n-1) is maximal.</p>
-    <details class="practice-reveal"><summary>Hint</summary><p>Small coefficients first</p></details>
-    <button type="button" class="btn btn-secondary sol-toggle" data-sol="sol-poly">Show solution</button>
-    <div class="sol" id="sol-poly" hidden><p>Solution: sort the array in ascending order, in Θ(n log n). Greedy choice: in an optimal solution A0 is the lowest value - swapping it with a smaller Amin at index i increases the value, since X &gt; 1. Optimal substructure: the rest of an optimal ordering is optimal for the polynomial starting from X.</p></div>
-    <h3>Sale at Reuben's kiosk</h3>
-    <p>A sale gives the cheaper product of every pair for free. After choosing 2n products, pair them so the total paid is minimal.</p>
-    <details class="practice-reveal"><summary>Hint</summary><p>Pair the expensive ones</p></details>
-    <button type="button" class="btn btn-secondary sol-toggle" data-sol="sol-kiosk">Show solution</button>
-    <div class="sol" id="sol-kiosk" hidden><p>Solution: sort the prices x1 ≥ x2 ≥ ... ≥ x2n and pair adjacent products, in Θ(n log n). Exchange argument: replacing the pairs of x1 and x2 with (x1, x2) and their partners never costs more, so some optimal pairing contains (x1, x2); remove it and repeat.</p></div>
-    <h3>Minimum number of open platforms at a train station</h3>
-    <p>Given arrays A of arrival times and D of departure times, find the minimum number of platforms needed so no train waits.</p>
-    <details class="practice-reveal"><summary>Hint</summary><p>Two sorted lists</p></details>
-    <button type="button" class="btn btn-secondary sol-toggle" data-sol="sol-platforms">Show solution</button>
-    <div class="sol" id="sol-platforms" hidden>
-    <p>Sort A and D, then walk the day with two indices: when the next arrival is earlier than the next departure, a train enters (curr grows); otherwise a train leaves (curr shrinks). The peak of curr is the answer.</p>
-    <pre class="pseudo">MinPlatforms(A[0..n-1], D[0..n-1]):
-    sort(A); sort(D)          // ascending
-    i &lt;- 0; j &lt;- 0
-    curr &lt;- 0                 // trains at the station now
-    ans &lt;- 0                  // max of curr so far
-    while i &lt; n and j &lt; n:
-        if A[i] &lt; D[j]:       // next arrival first
-            curr &lt;- curr + 1
-            ans &lt;- max(ans, curr)
-            i &lt;- i + 1
-        else:                 // train departs, frees a platform
-            curr &lt;- curr - 1
-            j &lt;- j + 1
-    return ans</pre>
-    <figure class="diagram" id="train-diagram"></figure>
-    <p class="caption">Example: A = [2.00, 2.10, 3.00, 3.20, 3.50, 5.00], D = [2.30, 3.20, 3.55, 4.00, 4.30, 5.20] after sorting. The peak is 3 platforms.</p>
+    <div class="usage">
+      <section class="container section" id="how-to-use" aria-labelledby="use-title">
+        <p class="eyebrow">Study guide</p>
+        <h2 id="use-title">Using the materials</h2>
+        <div class="steps">
+          <div class="step"><small>01 · Before class</small><h3>Preview</h3><p>Identify the problem, assumptions, and proposed algorithm.</p></div>
+          <div class="step"><small>02 · During class</small><h3>Experiment</h3><p>Trace the algorithm and compare predictions with its behavior.</p></div>
+          <div class="step"><small>03 · After class</small><h3>Explain</h3><p>Solve problems independently; justify correctness and analyze complexity.</p></div>
+        </div>
+      </section>
     </div>
-  </div>
+  </main>
 
-
-<div class="group" id="additional-practice">
-<div class="glabel">More practice</div>
-<h2>Try it yourself</h2>
-<p>Try each problem before opening the hints. The worked solution is available when you want to compare your reasoning.</p>
-<article class="practice-exercise" aria-labelledby="extra-title-1">
-<h3 id="extra-title-1">Find a counterexample</h3>
-<p>You have unlimited coins worth 1, 3 and 4. Make 6 using the fewest coins.</p>
-<ol><li>What does "take the largest coin that fits" produce?</li><li>Can you do better?</li><li>What does this show about the rule?</li></ol>
-<details class="practice-reveal"><summary>Hint 1</summary><p>After taking 4, how much remains?</p></details><details class="practice-reveal"><summary>Hint 2</summary><p>Try a solution that does not use 4.</p></details><details class="practice-reveal"><summary>Worked solution</summary><p>Greedy chooses 4 + 1 + 1: three coins. Choosing 3 + 3 uses two coins. Two is optimal because no single available coin is worth 6.</p><p>This counterexample proves that largest-first does not always minimize the number of coins for denominations 1, 3 and 4. It does not mean that every greedy algorithm fails.</p></details>
-</article>
-<article class="practice-exercise" aria-labelledby="extra-title-2">
-<h3 id="extra-title-2">Choose an order and justify it</h3>
-<p>Three cars are waiting at time 0. Refueling takes 8, 2 and 5 minutes, and only one car can refuel at a time.</p>
-<ol><li>Choose an order that minimizes total waiting time before refueling starts.</li><li>Calculate that total.</li><li>Explain why swapping two neighbouring cars supports your rule.</li></ol>
-<details class="practice-reveal"><summary>Hint 1</summary><p>Write the three waiting times for your order.</p></details><details class="practice-reveal"><summary>Hint 2</summary><p>Compare two neighbouring cars taking a and b minutes. What happens if the longer one goes second?</p></details><details class="practice-reveal"><summary>Worked solution</summary><p>Order: 2, 5, 8. Waiting times: 0, 2, 7. Total waiting time: 9 minutes.</p><p>For adjacent cars with a &gt; b and common starting time T, their combined waiting time changes from T + (T + a) to T + (T + b): a decrease of a - b. Later cars start at the same time because a + b is unchanged. Removing every such inversion gives non-decreasing refueling times without increasing total waiting time. Sorting takes O(n log n) time.</p></details>
-</article>
-<article class="practice-exercise" aria-labelledby="extra-title-3">
-<h3 id="extra-title-3">Compare two greedy rules</h3>
-<p>Activities: A=[0,6), B=[1,3), C=[3,5), D=[5,7). An activity may start exactly when another ends.</p>
-<ol><li>Select activities using earliest start first.</li><li>Repeat using earliest finish first.</li><li>Which result is optimal here? Explain.</li><li>Does this example alone prove a rule always works?</li></ol>
-<details class="practice-reveal"><summary>Hint 1</summary><p>After choosing A, which other activities still fit?</p></details><details class="practice-reveal"><summary>Hint 2</summary><p>Try omitting A.</p></details><details class="practice-reveal"><summary>Worked solution</summary><p>Earliest start first chooses only A. Earliest finish first chooses B, C, D: three activities.</p><p>Three is optimal for this input: the only fourth activity is A, which overlaps all three. This is a counterexample to earliest start first. It is not, by itself, a proof that earliest finish first always works. Successful examples do not cover every input; one counterexample is enough to refute an always claim.</p></details>
-</article>
-</div>
-
-  <p class="closing">Elina Benenson Opalinsky. Based on slides by Prof. Dana Shapira and Dr Igor Nor.</p>
-
-</div>
-
-<script>
-'use strict';
-
-/* ---------- shared data ---------- */
-const ITEMS = [
-  { id: 'item1', w: 10, v: 60 },
-  { id: 'item2', w: 20, v: 100 },
-  { id: 'item3', w: 30, v: 120 },
-];
-const CAP = 50;
-const WHOLE_OPTIMUM = 220;
-function ratio(item) { return item.v / item.w; }
-
-const ACTS = [
-  { id: 'a1', s: 1, f: 4 }, { id: 'a2', s: 3, f: 5 }, { id: 'a3', s: 0, f: 6 },
-  { id: 'a4', s: 5, f: 7 }, { id: 'a5', s: 3, f: 8 }, { id: 'a6', s: 5, f: 9 },
-  { id: 'a7', s: 6, f: 10 }, { id: 'a8', s: 8, f: 11 }, { id: 'a9', s: 8, f: 12 },
-  { id: 'a10', s: 2, f: 13 }, { id: 'a11', s: 12, f: 14 },
-];
-const TMAX = 14;
-
-/* ---------- Game 1: same knapsack, two modes ---------- */
-const kb = { mode: 'fractional', taken: {}, msg: null };
-
-function kbUsed() { return ITEMS.reduce((sum, it) => sum + (kb.taken[it.id] || 0), 0); }
-function kbValue() { return ITEMS.reduce((sum, it) => sum + (kb.taken[it.id] || 0) * ratio(it), 0); }
-function kbDone() {
-  const remaining = CAP - kbUsed();
-  if (kb.mode === 'fractional') return remaining <= 0;
-  return ITEMS.every(it => (kb.taken[it.id] || 0) > 0 || it.w > remaining);
-}
-
-function kbReset(nextMode) {
-  kb.taken = {};
-  kb.msg = null;
-  if (nextMode) kb.mode = nextMode;
-  renderKb();
-}
-
-function kbTake(item) {
-  if (kbDone()) return;
-  const already = kb.taken[item.id] || 0;
-  const remaining = CAP - kbUsed();
-  const candidates = ITEMS.filter(it => (kb.taken[it.id] || 0) < it.w && (kb.mode === 'fractional' || it.w <= remaining));
-  const best = candidates.reduce((a, b) => (ratio(a) >= ratio(b) ? a : b));
-  if (kb.mode === 'fractional') {
-    const amount = Math.min(item.w - already, remaining);
-    if (amount <= 0) return;
-    kb.taken = Object.assign({}, kb.taken, { [item.id]: already + amount });
-    if (item.id === best.id) {
-      const part = amount === item.w ? `all ${amount} kg of ${item.id}` : `${amount} kg of ${item.id} (all that still fits)`;
-      kb.msg = { tone: 'good', text: `${item.id} has the highest remaining value per kg (${ratio(item)} NIS/kg). Taking ${part}.` };
-    } else {
-      kb.msg = { tone: 'bad', text: `Greedy would take ${best.id} first - it has the highest remaining value per kg (${ratio(best)} NIS/kg). You took ${amount} kg of ${item.id} anyway.` };
-    }
-  } else {
-    if (item.w > remaining) {
-      kb.msg = { tone: 'bad', text: `${item.id} weighs ${item.w} kg and only ${remaining} kg is free - it does not fit whole.` };
-      renderKb();
-      return;
-    }
-    kb.taken = Object.assign({}, kb.taken, { [item.id]: item.w });
-    if (item.id === best.id) {
-      kb.msg = { tone: 'good', text: `${item.id} has the highest remaining value per kg (${ratio(item)} NIS/kg) - the greedy pick.` };
-    } else {
-      kb.msg = { tone: 'info', text: `You skipped ${best.id} (${ratio(best)} NIS/kg, the greedy pick) and took ${item.id} whole.` };
-    }
-  }
-  renderKb();
-}
-
-function kbVerdict() {
-  const totalValue = kbValue();
-  const remaining = CAP - kbUsed();
-  const fractionalDone = kb.mode === 'fractional' && remaining <= 0;
-  const wholeDone = kb.mode === 'whole' && ITEMS.every(it => (kb.taken[it.id] || 0) > 0 || it.w > remaining);
-  if (fractionalDone) {
-    return Math.round(totalValue) === 240
-      ? { tone: 'good', text: `Knapsack full. Total value NIS ${Math.round(totalValue)} - the optimum. The highest-ratio rule always solves the fractional problem.` }
-      : { tone: 'info', text: `Knapsack full. Total value NIS ${Math.round(totalValue)}. Following the highest-ratio rule from the start gives NIS 240, the fractional optimum.` };
-  }
-  if (wholeDone) {
-    return Math.round(totalValue) === WHOLE_OPTIMUM
-      ? { tone: 'good', text: `No more whole item fits. Total value NIS ${Math.round(totalValue)} - item2 + item3 is the optimum. Greedy by ratio would stop at NIS 160.` }
-      : { tone: 'bad', text: `No more whole item fits. Total value NIS ${Math.round(totalValue)}. The best whole-item packing is item2 + item3 = NIS 220: the ratio rule that was optimal for the fractional problem fails here.` };
-  }
-  return null;
-}
-
-function esc(s) { return s; }
-
-function renderKb() {
-  const root = document.getElementById('kb-game');
-  const used = kbUsed();
-  const totalValue = kbValue();
-  const remaining = CAP - used;
-  const done = kbDone();
-  const v = kbVerdict();
-  const rows = ITEMS.map(it => {
-    const t = kb.taken[it.id] || 0;
-    const full = t >= it.w;
-    const blocked = done || full || (kb.mode === 'whole' && it.w > remaining);
-    return `<div class="kb-row">
-      <button type="button" class="btn ${full ? 'btn-secondary selected' : 'btn-secondary'}" ${blocked && !full ? 'disabled' : ''} data-kb="${it.id}">${full ? it.id + ' - in' : it.id}</button>
-      <span class="kb-facts">${it.w} kg, NIS ${it.v} (${ratio(it)} NIS/kg)${t > 0 && !full ? ' - ' + t + ' kg in' : ''}</span>
-    </div>`;
-  }).join('');
-  root.innerHTML = `
-    <div class="choice-row">
-      <span class="choice-label">Mode</span>
-      <button type="button" class="choice-btn ${kb.mode === 'fractional' ? 'on' : ''}" data-kbmode="fractional">Fractional (can cut goods)</button>
-      <button type="button" class="choice-btn ${kb.mode === 'whole' ? 'on' : ''}" data-kbmode="whole">Whole items only</button>
+  <footer class="container footer">
+    <div class="footer-inner">
+      <span>Algorithms</span>
+      <span>Interactive notes and exercises</span>
     </div>
-    <p>${kb.mode === 'fractional'
-      ? 'Click an item to put in as much of it as fits. Try to fill the knapsack following the greedy rule: highest value per kg first.'
-      : 'Click an item to put it in whole. The knapsack holds 50 kg. Try to get the most value you can.'}</p>
-    <div class="kb-items">${rows}</div>
-    <div class="kb-bar" aria-label="Knapsack load ${used} of ${CAP} kg"><div class="kb-fill" style="width:${(used / CAP) * 100}%"></div></div>
-    <p class="caption">Knapsack: ${used} / ${CAP} kg, value so far NIS ${Math.round(totalValue)}</p>
-    ${kb.msg && !v ? `<p class="feedback feedback-${kb.msg.tone}" role="status">${kb.msg.text}</p>` : ''}
-    ${v ? `<p class="feedback feedback-${v.tone}" role="status">${v.text}</p>` : ''}
-    <button type="button" class="btn btn-ghost" data-kbreset>Restart the knapsack</button>`;
-  root.querySelectorAll('[data-kb]').forEach(b => b.addEventListener('click', () => kbTake(ITEMS.find(it => it.id === b.dataset.kb))));
-  root.querySelectorAll('[data-kbmode]').forEach(b => b.addEventListener('click', () => kbReset(b.dataset.kbmode)));
-  root.querySelector('[data-kbreset]').addEventListener('click', () => kbReset());
-}
-
-/* ---------- activity selection: steps data ---------- */
-function buildSteps() {
-  const steps = [];
-  const n = ACTS.length;
-  steps.push({ line: 1, desc: `n = ${n}. The activities are already sorted by increasing finish time: f1 ≤ f2 ≤ ... ≤ f${n}.`, A: [], j: 0, i: null });
-  steps.push({ line: 2, desc: 'A = {1}: take a1, the activity that finishes earliest.', A: [1], j: 0, i: null });
-  steps.push({ line: 3, desc: 'j = 1: a1 is the last selected activity; it finishes at f1 = 4.', A: [1], j: 1, i: null });
-  let A = [1];
-  let j = 1;
-  for (let i = 2; i <= n; i++) {
-    const ai = ACTS[i - 1];
-    const aj = ACTS[j - 1];
-    steps.push({ line: 4, desc: `i = ${i}: consider a${i} (starts ${ai.s}, finishes ${ai.f}).`, A: A.slice(), j, i });
-    if (ai.s >= aj.f) {
-      steps.push({ line: 5, desc: `Is s${i} ≥ f${j}? ${ai.s} ≥ ${aj.f} - yes, a${i} is compatible with the last selected activity.`, A: A.slice(), j, i });
-      A = A.concat([i]);
-      steps.push({ line: 6, desc: `A = A ∪ {${i}}: select a${i}.`, A: A.slice(), j, i });
-      j = i;
-      steps.push({ line: 7, desc: `j = ${i}: the last selected activity is now a${i}, finishing at ${ai.f}.`, A: A.slice(), j, i });
-    } else {
-      steps.push({ line: 5, desc: `Is s${i} ≥ f${j}? ${ai.s} ≥ ${aj.f} - no, a${i} overlaps a${j}, so it stays out.`, A: A.slice(), j, i });
-    }
-  }
-  steps.push({ line: 8, desc: `return A = {${A.map(x => 'a' + x).join(', ')}} - ${A.length} activities, the optimum.`, A: A.slice(), j, i: null, final: true });
-  return steps;
-}
-const STEPS = buildSteps();
-const GREEDY_SET = STEPS[STEPS.length - 1].A;
-const OPT_SIZE = GREEDY_SET.length;
-
-const PC_LINES = [
-  { num: null, text: 'Greedy-Activity-Selector(s, f)' },
-  { num: 1, text: '1. n <- length(s)' },
-  { num: 2, text: '2. A <- {1}      // selected activities' },
-  { num: 3, text: '3. j <- 1        // last selected' },
-  { num: 4, text: '4. for i = 2 to n' },
-  { num: 5, text: '5.     if si >= fj' },
-  { num: 6, text: '6.         then A <- A ∪ {i}' },
-  { num: 7, text: '7.              j <- i' },
-  { num: 8, text: '8. return A' },
-];
-
-/* ---------- Game 2: guided / free play / walkthrough ---------- */
-const ag = {
-  mode: 'guided',
-  gSel: [], gMsg: null,
-  fSel: [], fMsg: null,
-  stepIdx: 0,
-};
-
-function gLast() { return ag.gSel.length === 0 ? 0 : ag.gSel[ag.gSel.length - 1].f; }
-function gCompatible() { return ACTS.filter(a => a.s >= gLast() && !ag.gSel.some(x => x.id === a.id)); }
-function gDone() { return gCompatible().length === 0; }
-
-function gPick(a) {
-  if (gDone() || ag.gSel.some(x => x.id === a.id)) return;
-  const lastFinish = gLast();
-  if (a.s < lastFinish) {
-    ag.gMsg = { tone: 'bad', text: `${a.id} starts at ${a.s}, before the last selected activity finishes at ${lastFinish} - it clashes.` };
-    renderAg();
-    return;
-  }
-  const expected = gCompatible().reduce((m, x) => (x.f < m.f ? x : m));
-  if (a.id === expected.id) {
-    ag.gSel = ag.gSel.concat([a]);
-    const rest = ACTS.filter(x => x.s >= a.f && !ag.gSel.some(y => y.id === x.id));
-    if (rest.length === 0) {
-      ag.gMsg = { tone: 'good', text: `${a.id} starts at ${a.s} ≥ ${lastFinish}: selected. Answer: {a1, a4, a8, a11} - the optimum, built step by step.` };
-    } else {
-      ag.gMsg = { tone: 'good', text: `${a.id} starts at ${a.s} ≥ ${lastFinish}: selected. The line moves to f = ${a.f}.` };
-    }
-  } else {
-    ag.gMsg = { tone: 'info', text: `${a.id} is compatible, but greedy takes the compatible activity that finishes earliest: ${expected.id} finishes at ${expected.f}.` };
-  }
-  renderAg();
-}
-
-function fLast() { return ag.fSel.length === 0 ? 0 : Math.max.apply(null, ag.fSel.map(x => x.f)); }
-
-function fToggle(a) {
-  if (ag.fSel.some(x => x.id === a.id)) {
-    ag.fSel = ag.fSel.filter(x => x.id !== a.id);
-    ag.fMsg = { tone: 'info', text: `${a.id} removed. ${ag.fSel.length === 0 ? 'No activities selected.' : ag.fSel.length + ' still selected.'}` };
-    renderAg();
-    return;
-  }
-  const clash = ag.fSel.find(x => a.s < x.f && x.s < a.f);
-  if (clash) {
-    ag.fMsg = { tone: 'bad', text: `${a.id} (${a.s} → ${a.f}) overlaps ${clash.id} (${clash.s} → ${clash.f}) - compatible activities only.` };
-    renderAg();
-    return;
-  }
-  ag.fSel = ag.fSel.concat([a]);
-  ag.fMsg = { tone: 'info', text: `${a.id} added - ${ag.fSel.length} selected. Press "Check my schedule" when you are done.` };
-  renderAg();
-}
-
-function fCheck() {
-  const mine = ag.fSel.slice().sort((x, y) => x.f - y.f).map(x => x.id);
-  if (mine.length === 0) {
-    ag.fMsg = { tone: 'info', text: 'Select some activities first, then check.' };
-  } else if (mine.length === OPT_SIZE) {
-    const same = mine.join(',') === GREEDY_SET.map(x => 'a' + x).join(',');
-    ag.fMsg = { tone: 'good', text: same
-      ? `{${mine.join(', ')}} - ${OPT_SIZE} compatible activities, the optimum. Exactly the schedule the greedy rule builds.`
-      : `{${mine.join(', ')}} - ${OPT_SIZE} compatible activities, the optimum. Different from the greedy answer {a1, a4, a8, a11} - and just as good.` };
-  } else {
-    ag.fMsg = { tone: 'info', text: `${mine.length} compatible ${mine.length === 1 ? 'activity' : 'activities'} - but ${OPT_SIZE} fit in this example. Can you squeeze in one more?` };
-  }
-  renderAg();
-}
-
-function timelineRows() {
-  const step = STEPS[ag.stepIdx];
-  const selIds = ag.mode === 'guided' ? ag.gSel.map(x => x.id)
-    : ag.mode === 'free' ? ag.fSel.map(x => x.id)
-    : step.A.map(x => 'a' + x);
-  const curId = ag.mode === 'steps' && step.i !== null ? 'a' + step.i : null;
-  const skipIds = ag.mode === 'steps'
-    ? ACTS.filter(a => { const idx = Number(a.id.slice(1)); return idx >= 2 && idx < (step.i !== null ? step.i : ACTS.length + 1) && !step.A.includes(idx); }).map(a => a.id)
-    : [];
-  const lineAt = ag.mode === 'guided' ? gLast() : ag.mode === 'free' ? fLast() : (step.j >= 1 ? ACTS[step.j - 1].f : 0);
-  return ACTS.map(a => {
-    const isSel = selIds.includes(a.id);
-    const isCur = curId === a.id && !isSel;
-    const isSkip = skipIds.includes(a.id);
-    const cls = `tl-row${isSel ? ' tl-sel' : ''}${isCur ? ' tl-cur' : ''}${isSkip ? ' tl-skip' : ''}${ag.mode === 'steps' ? ' tl-static' : ''}`;
-    const aria = `${a.id}, starts ${a.s}, finishes ${a.f}${isSel ? ', selected' : ''}${isCur ? ', being considered' : ''}`;
-    return `<button type="button" class="${cls}" data-act="${a.id}" aria-label="${aria}">
-      <span class="tl-label">${a.id}</span>
-      <span class="tl-track">
-        <span class="tl-bar" style="left:${(a.s / TMAX) * 100}%;width:${((a.f - a.s) / TMAX) * 100}%"></span>
-        <span class="tl-line" style="left:${(lineAt / TMAX) * 100}%"></span>
-      </span>
-      <span class="tl-times">${a.s} → ${a.f}</span>
-    </button>`;
-  }).join('') + `<div class="tl-axis"><span class="tl-label"></span><span class="tl-track tl-axis-track">` +
-    [0, 2, 4, 6, 8, 10, 12, 14].map(t => `<span class="tl-tick" style="left:${(t / TMAX) * 100}%">${t}</span>`).join('') +
-    `</span><span class="tl-times"></span></div>`;
-}
-
-function renderAg() {
-  const root = document.getElementById('act-game');
-  const step = STEPS[ag.stepIdx];
-  const intro = ag.mode === 'guided'
-    ? 'Eleven activities, sorted by increasing finish time. Click the activity the greedy algorithm takes next. The dotted line marks when the last selected activity finishes.'
-    : ag.mode === 'free'
-      ? 'Same eleven activities, your rules. Click an activity to add it, click it again to remove it, and build any compatible schedule you like. Then check whether yours is optimal.'
-      : 'Walk through Greedy-Activity-Selector one line at a time. Watch the variables A, j and i, and see each decision on the timeline.';
-  const pcBlock = ag.mode === 'steps' ? `
-    <div class="pseudo pc">${PC_LINES.map(l => `<span class="pc-line${l.num !== null && l.num === step.line ? ' pc-on' : ''}">${l.text}</span>`).join('')}</div>
-    <p class="caption">A = {${step.A.map(x => 'a' + x).join(', ')}} · j = ${step.j >= 1 ? step.j : '-'} · i = ${step.i !== null ? step.i : '-'}</p>` : '';
-  const tail = ag.mode === 'guided'
-    ? `${ag.gMsg ? `<p class="feedback feedback-${ag.gMsg.tone}" role="status">${ag.gMsg.text}</p>` : ''}
-       <button type="button" class="btn btn-ghost" data-agreset>Restart the schedule</button>`
-    : ag.mode === 'free'
-      ? `${ag.fMsg ? `<p class="feedback feedback-${ag.fMsg.tone}" role="status">${ag.fMsg.text}</p>` : ''}
-         <div class="pc-controls">
-           <button type="button" class="btn btn-primary" data-agcheck>Check my schedule</button>
-           <button type="button" class="btn btn-ghost" data-agreset>Restart</button>
-         </div>`
-      : `<p class="feedback feedback-${step.final ? 'good' : 'info'}" role="status">${step.desc}</p>
-         <div class="pc-controls">
-           <button type="button" class="btn btn-primary" data-agnext ${ag.stepIdx >= STEPS.length - 1 ? 'disabled' : ''}>Next step</button>
-           <button type="button" class="btn btn-ghost" data-agreset>Restart the walkthrough</button>
-         </div>`;
-  root.innerHTML = `
-    <div class="choice-row">
-      <span class="choice-label">Mode</span>
-      <button type="button" class="choice-btn ${ag.mode === 'guided' ? 'on' : ''}" data-agmode="guided">Guided (earliest finish first)</button>
-      <button type="button" class="choice-btn ${ag.mode === 'free' ? 'on' : ''}" data-agmode="free">Free play</button>
-      <button type="button" class="choice-btn ${ag.mode === 'steps' ? 'on' : ''}" data-agmode="steps">Pseudocode steps</button>
-    </div>
-    <p>${intro}</p>
-    ${pcBlock}
-    <div class="tl">${timelineRows()}</div>
-    ${tail}`;
-  root.querySelectorAll('[data-agmode]').forEach(b => b.addEventListener('click', () => { ag.mode = b.dataset.agmode; renderAg(); }));
-  root.querySelectorAll('[data-act]').forEach(b => b.addEventListener('click', () => {
-    const a = ACTS.find(x => x.id === b.dataset.act);
-    if (ag.mode === 'guided') gPick(a);
-    else if (ag.mode === 'free') fToggle(a);
-  }));
-  const reset = root.querySelector('[data-agreset]');
-  if (reset) reset.addEventListener('click', () => {
-    if (ag.mode === 'guided') { ag.gSel = []; ag.gMsg = null; }
-    else if (ag.mode === 'free') { ag.fSel = []; ag.fMsg = null; }
-    else { ag.stepIdx = 0; }
-    renderAg();
-  });
-  const check = root.querySelector('[data-agcheck]');
-  if (check) check.addEventListener('click', fCheck);
-  const next = root.querySelector('[data-agnext]');
-  if (next) next.addEventListener('click', () => { if (ag.stepIdx < STEPS.length - 1) { ag.stepIdx++; renderAg(); } });
-}
-
-/* ---------- Game 3: heaviest path tree ---------- */
-const TREE_NODES = {
-  n20: { v: 20, x: 160, y: 25, kids: ['n2', 'n3'] },
-  n2: { v: 2, x: 95, y: 100, kids: ['n7', 'n10'] },
-  n3: { v: 3, x: 225, y: 100, kids: ['n1'] },
-  n7: { v: 7, x: 60, y: 172, kids: [] },
-  n10: { v: 10, x: 130, y: 172, kids: [] },
-  n1: { v: 1, x: 225, y: 172, kids: [] },
-};
-const TREE_EDGES = [['n20', 'n2'], ['n20', 'n3'], ['n2', 'n7'], ['n2', 'n10'], ['n3', 'n1']];
-const TREE_GREEDY = ['n20', 'n3', 'n1'];
-const TREE_OPT = ['n20', 'n2', 'n10'];
-const tree = { path: ['n20'], show: false };
-
-function treeSum(p) { return p.reduce((sum, id) => sum + TREE_NODES[id].v, 0); }
-function treeOnPath(edge, p) { const i = p.indexOf(edge[0]); return i >= 0 && p[i + 1] === edge[1]; }
-
-function treeVerdict() {
-  const last = tree.path[tree.path.length - 1];
-  if (TREE_NODES[last].kids.length > 0) return null;
-  const sum = treeSum(tree.path);
-  const text = tree.path.map(id => TREE_NODES[id].v).join(' → ') + ' = ' + sum;
-  if (sum === 32) return { tone: 'good', text: `Your path: ${text} - the heaviest path. Greedy never finds it: at the root it takes the heavier child 3 and ends with 24.` };
-  if (sum === 24) return { tone: 'info', text: `Your path: ${text} - exactly what greedy picks (heavier child each time). The optimum is 20 → 2 → 10 = 32.` };
-  return { tone: 'info', text: `Your path: ${text} - beats greedy's 24, but the heaviest path is 20 → 2 → 10 = 32.` };
-}
-
-function renderTree() {
-  const root = document.getElementById('tree-game');
-  const last = tree.path[tree.path.length - 1];
-  const picks = TREE_NODES[last].kids;
-  const edges = TREE_EDGES.map(([a, b]) => {
-    const A = TREE_NODES[a], B = TREE_NODES[b];
-    let stroke = 'rgba(77,53,51,0.25)', width = 1.5;
-    if (!tree.show && treeOnPath([a, b], tree.path)) { stroke = '#4d3533'; width = 3; }
-    if (tree.show) {
-      if (treeOnPath([a, b], TREE_GREEDY)) { stroke = '#ed313e'; width = 3.5; }
-      if (treeOnPath([a, b], TREE_OPT)) { stroke = '#73a89a'; width = 3.5; }
-    }
-    return `<line x1="${A.x}" y1="${A.y}" x2="${B.x}" y2="${B.y}" stroke="${stroke}" stroke-width="${width}" stroke-linecap="round" />`;
-  }).join('');
-  const nodes = Object.entries(TREE_NODES).map(([id, n]) => {
-    const inPath = tree.path.includes(id);
-    const pickable = !tree.show && picks.includes(id);
-    const fill = inPath ? 'rgba(115,168,154,0.35)' : '#fff';
-    return `<g class="${pickable ? 'tree-pick' : ''}" data-tnode="${id}" role="button" aria-label="Node ${n.v}${pickable ? ', click to extend your path' : ''}" tabindex="${pickable ? 0 : -1}">
-      <circle cx="${n.x}" cy="${n.y}" r="17" fill="${fill}" stroke="rgba(77,53,51,0.7)" stroke-width="1.5" />
-      <text x="${n.x}" y="${n.y + 5}" text-anchor="middle" font-size="15" font-weight="600" fill="#4d3533" pointer-events="none">${n.v}</text>
-    </g>`;
-  }).join('');
-  const v = treeVerdict();
-  const sum = treeSum(tree.path);
-  root.innerHTML = `
-    <p>Try it: click the next node to grow your own path from the root to a leaf. Heaviest total wins.</p>
-    <svg viewBox="0 0 300 190" class="diagram-svg" role="img" aria-label="Tree: root 20, children 2 and 3; node 2 leads to 7 and 10, node 3 leads to 1">
-      ${edges}
-      ${nodes}
-    </svg>
-    <p class="caption">Your path: ${tree.path.map(id => TREE_NODES[id].v).join(' → ')}${picks.length ? ` - sum so far ${sum}` : ` - total ${sum}`}</p>
-    ${v ? `<p class="feedback feedback-${v.tone}" role="status">${v.text}</p>` : ''}
-    <div class="pc-controls">
-      <button type="button" class="btn btn-secondary" data-tshow>${tree.show ? 'Hide greedy and optimum' : 'Show greedy and optimum'}</button>
-      <button type="button" class="btn btn-ghost" data-treset>Restart the path</button>
-    </div>
-    ${tree.show ? `<p class="caption">Greedy (red) takes the heavier child each time: 20 → 3 → 1 = 24. The optimum (teal) is 20 → 2 → 10 = 32. Example adapted from slides by Igor Nor.</p>` : ''}`;
-  root.querySelectorAll('[data-tnode]').forEach(g => {
-    const extend = () => {
-      const id = g.dataset.tnode;
-      if (picks.includes(id) && !tree.show) { tree.path = tree.path.concat([id]); renderTree(); }
-    };
-    g.addEventListener('click', extend);
-    g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); extend(); } });
-  });
-  root.querySelector('[data-tshow]').addEventListener('click', () => { tree.show = !tree.show; renderTree(); });
-  root.querySelector('[data-treset]').addEventListener('click', () => { tree.path = ['n20']; tree.show = false; renderTree(); });
-}
-
-/* ---------- Game 4: tasks with deadlines ---------- */
-const DLT = [
-  { id: 'A', d: 1, t: 100 },
-  { id: 'B', d: 10, t: 1 },
-];
-const dl = { order: [], showAnalysis: false };
-
-function renderDl() {
-  const root = document.getElementById('dl-game');
-  let time = 0, maxDelay = 0;
-  const rows = dl.order.map((id, idx) => {
-    const task = DLT.find(x => x.id === id);
-    const finish = time + task.d;
-    const delay = Math.max(0, finish - task.t);
-    maxDelay = Math.max(maxDelay, delay);
-    time = finish;
-    return `<div class="dl-row">
-      <span class="dl-pos">${idx + 1}.</span>
-      <span class="kb-facts">Task ${id} (duration ${task.d}, deadline ${task.t}) - finishes at ${finish}${delay > 0 ? `, delay ${delay}` : ', on time'}</span>
-    </div>`;
-  }).join('');
-  const remaining = DLT.filter(x => !dl.order.includes(x.id));
-  const done = remaining.length === 0;
-  const verdict = !done ? null : maxDelay <= 9
-    ? { tone: 'good', text: `Maximum delay ${maxDelay} - the best possible here. Earliest deadline first (B, then A) beats the proposed shortest-first rule.` }
-    : { tone: 'bad', text: `Maximum delay ${maxDelay}. This is exactly the shortest-first order the rule proposes - and it is not the best. Try the other order.` };
-  root.innerHTML = `
-    <p>Try it: click the tasks in the order you would perform them. Tasks run one at a time from time 0. Can you keep the maximum delay under 10?</p>
-    <div class="choice-row">
-      ${remaining.map(k => `<button type="button" class="choice-btn" data-dl="${k.id}">Task ${k.id}: duration ${k.d}, deadline ${k.t}</button>`).join('')}
-    </div>
-    ${rows ? `<div class="dl-order">${rows}</div>` : ''}
-    ${done ? `<p class="caption">Maximum delay of this order: ${maxDelay}</p>` : ''}
-    ${verdict ? `<p class="feedback feedback-${verdict.tone}" role="status">${verdict.text}</p>` : ''}
-    <div class="pc-controls">
-      <button type="button" class="btn btn-ghost" data-dlreset ${dl.order.length ? '' : 'disabled'}>Restart</button>
-      <button type="button" class="btn btn-secondary" data-dlanalysis>${dl.showAnalysis ? 'Hide the analysis' : 'Show the analysis'}</button>
-    </div>
-    <div class="sol"${dl.showAnalysis ? '' : ' hidden'}><p>Counterexample: task A has duration 1 and deadline 100; task B has duration 10 and deadline 1. Shortest first (A then B): B finishes at 11, maximum delay 10. Better order (B then A): B finishes at 10 with delay 9, A finishes at 11 with delay 0 - maximum delay 9. The correct greedy rule: earliest deadline first.</p></div>`;
-  root.querySelectorAll('[data-dl]').forEach(b => b.addEventListener('click', () => { dl.order = dl.order.concat([b.dataset.dl]); renderDl(); }));
-  root.querySelector('[data-dlreset]').addEventListener('click', () => { dl.order = []; dl.showAnalysis = false; renderDl(); });
-  root.querySelector('[data-dlanalysis]').addEventListener('click', () => { dl.showAnalysis = !dl.showAnalysis; renderDl(); });
-}
-
-/* ---------- static diagrams built from data ---------- */
-function renderStaticTimeline() {
-  const chosen = ['a1', 'a4', 'a8', 'a11'];
-  document.getElementById('static-tl').innerHTML = ACTS.map(a =>
-    `<div class="tl-row tl-static${chosen.includes(a.id) ? ' tl-sel' : ''}">
-      <span class="tl-label">${a.id}</span>
-      <span class="tl-track"><span class="tl-bar" style="left:${(a.s / TMAX) * 100}%;width:${((a.f - a.s) / TMAX) * 100}%"></span></span>
-      <span class="tl-times">${a.s} → ${a.f}</span>
-    </div>`).join('') +
-    `<div class="tl-axis"><span class="tl-label"></span><span class="tl-track tl-axis-track">` +
-    [0, 2, 4, 6, 8, 10, 12, 14].map(t => `<span class="tl-tick" style="left:${(t / TMAX) * 100}%">${t}</span>`).join('') +
-    `</span><span class="tl-times"></span></div>`;
-}
-
-function renderTrainDiagram() {
-  const events = [
-    { t: '2.00', d: 1 }, { t: '2.10', d: 1 }, { t: '2.30', d: -1 }, { t: '3.00', d: 1 },
-    { t: '3.20', d: -1 }, { t: '3.20', d: 1 }, { t: '3.50', d: 1 }, { t: '3.55', d: -1 },
-    { t: '4.00', d: -1 }, { t: '4.30', d: -1 }, { t: '5.00', d: 1 }, { t: '5.20', d: -1 },
-  ];
-  const W = 340, H = 150, left = 26, top = 16, bottom = 42;
-  const stepX = (W - left - 8) / events.length;
-  const yFor = v => top + (3 - v) * ((H - top - bottom) / 3);
-  let curr = 0;
-  const pts = [`${left},${yFor(0)}`];
-  const marks = [];
-  events.forEach((e, i) => {
-    const x = left + stepX * (i + 1);
-    pts.push(`${x},${yFor(curr)}`);
-    curr += e.d;
-    pts.push(`${x},${yFor(curr)}`);
-    marks.push({ x, y: yFor(curr), d: e.d, t: e.t });
-  });
-  const grid = [0, 1, 2, 3].map(v =>
-    `<line x1="${left}" y1="${yFor(v)}" x2="${W - 8}" y2="${yFor(v)}" stroke="rgba(77,53,51,0.1)" stroke-width="1" />
-     <text x="${left - 6}" y="${yFor(v) + 4}" text-anchor="end" font-size="10" fill="rgba(77,53,51,0.7)">${v}</text>`).join('');
-  const dots = marks.map(m =>
-    `<circle cx="${m.x}" cy="${m.y}" r="3" fill="${m.d > 0 ? '#73a89a' : 'rgba(77,53,51,0.7)'}" />
-     <text x="${m.x}" y="${H - 26}" text-anchor="end" font-size="9" fill="rgba(77,53,51,0.7)" transform="rotate(-40 ${m.x} ${H - 26})">${m.t}</text>`).join('');
-  document.getElementById('train-diagram').innerHTML =
-    `<svg viewBox="0 0 ${W} ${H}" class="diagram-svg diagram-wide" role="img" aria-label="Sweep of the train-station day: platforms in use peak at 3">
-      ${grid}
-      <polyline points="${pts.join(' ')}" fill="none" stroke="#73a89a" stroke-width="2.5" stroke-linejoin="round" />
-      ${dots}
-      <text x="${W - 10}" y="${yFor(3) - 6}" text-anchor="end" font-size="11" font-weight="600" fill="#73a89a">peak: 3 platforms</text>
-    </svg>
-    <p class="caption">Walking the day with two indices: arrivals (teal dots) raise the count, departures (gray dots) lower it. The peak, 3, is the minimum number of platforms.</p>`;
-}
-
-/* ---------- solution reveals (static exercise sections) ---------- */
-document.querySelectorAll('.sol-toggle[data-sol]').forEach(b => b.addEventListener('click', () => {
-  const el = document.getElementById(b.dataset.sol);
-  if (!el) return;
-  const show = el.hasAttribute('hidden');
-  el.toggleAttribute('hidden', !show);
-  b.textContent = show ? 'Hide solution' : 'Show solution';
-}));
-
-renderStaticTimeline();
-renderTrainDiagram();
-renderKb();
-renderAg();
-renderTree();
-renderDl();
-</script>
+  </footer>
 </body>
 </html>

@@ -1,0 +1,8 @@
+/* Shared topic-level navigation. */
+.site-breadcrumbs {
+ display: flex; align-items:center; gap: 10px; flex-wrap:wrap;
+ margin: 0 0 28px; font-size: 13px; color: var(--ink2);
+}
+.site-breadcrumbs a { color: var(--teal-dark); font-weight: 700; text-underline-offset:3px; }
+.site-breadcrumbs span[aria-current] { font-weight:600; }
+@media (max-width: 650px) { .site-breadcrumbs { margin-bottom: 20px; } }
