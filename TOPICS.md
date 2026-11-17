@@ -13,12 +13,15 @@ The root `index.html` is the Algorithms homepage. It displays **four official sy
 
 The homepage groups these 15 items into topical cards as a **website design choice**; the syllabus does not prescribe one separate page per item or the exact breakdown of the cards.
 
-**Only Greedy Algorithms is live within this draft.** The other cards are plain, unlinked placeholders marked "Coming later"; they must not imply completed content.
+**Greedy Algorithms and Dynamic Programming are available.** The other 13 cards are unlinked placeholders; the homepage availability count distinguishes them from completed material.
 
 ## Files
 
 - `index.html`, `site.css`: multi-topic course homepage.
 - `topics/greedy.html`: interactive Greedy Algorithms unit with the existing games and exercises.
+- `topics/dynamic-programming.html`: English-language DP lecture companion, based on the supplied Unit 4 slides, with Fibonacci, binomial coefficients, Kadane, 0/1 knapsack, matrix chains, LCS, and staircase practice.
+- `topics/dynamic-programming-core.js`: pure algorithms; `dynamic-programming.js` and `dynamic-programming.css`: independent explorers, checks, progress, and styles.
+- `tests/dynamic-programming.test.cjs`: independent brute-force comparisons and lecture-example checks. Run with `node --test tests/dynamic-programming.test.cjs`.
 - `learning.js`, `learning.css`: **Greedy-specific** guided units and progress; do not attach to unrelated pages without first generalizing.
 - `topic-shell.css`: shared breadcrumb style.
 - `topics/_template.html`: template for future subject pages.
