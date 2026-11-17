@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Explore dynamic programming through Fibonacci, binomial coefficients, Kadane, 0/1 knapsack, matrix chains, and LCS. Interactive tables, reconstruction, and practice.">
+  <title>Dynamic Programming | Algorithms Lecture Companion</title>
+  <link rel="stylesheet" href="../site.css">
+  <link rel="stylesheet" href="dynamic-programming.css">
+  <script src="dynamic-programming-core.js" defer></script>
+  <script src="dynamic-programming.js" defer></script>
+</head>
+<body class="dp-page">
+<a href="#main" class="skip-link">Skip to content</a>
+<header class="topbar"><div class="container topbar-inner">
+  <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true">A</span><span>Algorithms</span></a>
+  <span class="topbar-note">Lecture companion</span>
+</div></header>
+<main id="main" class="container">
+  <section class="dp-hero">
+    <nav class="dp-breadcrumb" aria-label="Breadcrumb"><a href="../index.html">All topics</a><span aria-hidden="true">/</span><span aria-current="page">Dynamic Programming</span></nav>
+    <h1>Dynamic Programming</h1>
+    <p class="lead">Define the subproblem. Store its answer. Build the solution.<br>Explore how repeated recursive work becomes a table of useful decisions.</p>
+    <div class="dp-badges"><span>6 worked topics</span><span>Interactive DP tables</span><span>Solution reconstruction</span><span>Independent practice</span></div>
+  </section>
+  <div class="dp-layout">
+    <nav class="dp-nav" aria-label="Learning sections">
+      <small>IN THIS TOPIC</small>
+      <a href="#idea">01 · The DP idea</a><a href="#fibonacci">02 · Fibonacci</a>
+      <a href="#binomial">03 · Binomial coefficients</a><a href="#kadane">04 · Maximum subarray</a>
+      <a href="#knapsack">05 · 0/1 Knapsack</a><a href="#matrix">06 · Matrix chains</a>
+      <a href="#lcs">07 · LCS</a><a href="#practice">08 · Design it yourself</a><a href="#glossary">Glossary</a>
+      <small id="progress-label" aria-live="polite">0 / 8 sections completed</small>
+      <div class="dp-progress" aria-hidden="true"><span id="progress-fill"></span></div>
+      <button type="button" id="reset-progress">Reset progress</button>
+    </nav>
+    <div class="dp-content">
+      <noscript><p class="dp-note">The explanations and solutions below work without JavaScript. Enable JavaScript to use the interactive tables and knowledge checks.</p></noscript>
+
+      <section id="idea" class="dp-unit">
+        <span class="dp-kicker">01 / FOUNDATIONS</span><h2>One subproblem, one computation</h2>
+        <p>A recursive solution may reach the same subproblem through different branches. Dynamic programming saves that answer and reuses it. The key design task is choosing a <strong>state</strong> that contains everything needed to solve the remaining problem.</p>
+        <div class="dp-concept"><h3>Two ideas to look for</h3><p><strong>Overlapping subproblems:</strong> the same smaller problem appears repeatedly.</p><p><strong>Optimal substructure:</strong> for an optimization problem, an optimal solution can be built from optimal solutions to suitable subproblems. Counting problems such as Fibonacci and binomial coefficients also use DP, without minimizing or maximizing an objective.</p></div>
+        <h3>A reusable design process</h3>
+        <ol><li><strong>State:</strong> what exactly does one table entry mean?</li><li><strong>Recurrence:</strong> which smaller states determine it?</li><li><strong>Base cases:</strong> where does the computation start?</li><li><strong>Evaluation:</strong> choose an order that respects dependencies, or use memoization.</li><li><strong>Reconstruction:</strong> recover a solution, if the problem asks for more than its value.</li><li><strong>Complexity:</strong> count states and work per state; include reconstruction.</li></ol>
+        <div class="dp-check" data-quiz="idea"></div>
+        <label class="dp-done"><input type="checkbox" data-complete="idea">Mark section complete</label>
+      </section>
+
+      <section id="fibonacci" class="dp-unit">
+        <span class="dp-kicker">02 / REPEATED WORK</span><h2>Fibonacci: recursion to reuse</h2>
+        <p>Let <code>F(n)</code> be the nth Fibonacci number. Direct recursion computes both predecessors at every non-base call. In the recursion tree for <code>F(5)</code>, for example, <code>F(3)</code> appears twice and <code>F(2)</code> three times.</p>
+        <div class="formula">F(0) = 0, F(1) = 1<br>F(n) = F(n−1) + F(n−2), for n ≥ 2</div>
+        <div class="dp-lab" id="fib-lab"><h3>How much work is repeated?</h3>
+          <label class="dp-field">Compute F(n), 0 ≤ n ≤ 25<input id="fib-n" type="number" min="0" max="25" value="5"></label>
+          <div class="dp-controls"><button type="button" id="fib-build" class="primary">Build comparison</button><button type="button" id="fib-step">Next value</button><button type="button" id="fib-all">Complete table</button></div>
+          <div id="fib-metrics" class="dp-metrics"></div><div id="fib-cells" class="dp-cells" aria-label="Fibonacci values"></div>
+          <p id="fib-status" class="dp-status" role="status"></p>
+        </div>
+        <h3>Bottom-up: start with the base cases</h3>
+        <pre>Fib(n):
+    if n == 0: return 0
+    F[0] = 0; F[1] = 1
+    for i = 2 to n:
+        F[i] = F[i−1] + F[i−2]
+    return F[n]</pre>
+        <h3>Top-down: remember recursive results</h3>
+        <pre>memo = empty map
+Fib(k):
+    if k ≤ 1: return k
+    if k is in memo: return memo[k]
+    memo[k] = Fib(k−1) + Fib(k−2)
+    return memo[k]</pre>
+        <p class="dp-complexity">Naive recursion: Θ(φⁿ) time, where φ ≈ 1.618, and O(n) stack space. Both DP versions: O(n) time and O(n) space, counting arithmetic operations as constant time. Bottom-up needs only the two previous values, so its auxiliary space can be O(1). Large-integer arithmetic adds a cost as n grows.</p>
+        <details><summary>Why is the bottom-up result correct?</summary><p>The base cases are correct by definition. Assume all earlier entries are correct. The recurrence adds the two correct preceding Fibonacci values, so the next entry is correct. Induction establishes every entry through F(n).</p></details>
+        <div class="dp-check" data-quiz="fibonacci"></div>
+        <label class="dp-done"><input type="checkbox" data-complete="fibonacci">Mark section complete</label>
+      </section>
+
+      <section id="binomial" class="dp-unit">
+        <span class="dp-kicker">03 / COUNTING</span><h2>Binomial coefficients</h2>
+        <p><code>C(n,k)</code> counts the ways to choose k items from n distinct items, ignoring order. Choose one distinguished item: a selection either includes it, leaving k−1 choices among n−1 items, or excludes it, leaving k choices among n−1 items. These two disjoint cases cover every selection.</p>
+        <div class="formula">C(n,0) = C(n,n) = 1<br>C(n,k) = C(n−1,k−1) + C(n−1,k), for 0 &lt; k &lt; n</div>
+        <p>For five items A, B, C, D, E, the ten pairs are AB, AC, AD, AE, BC, BD, BE, CD, CE, DE. Thus <code>C(5,2) = 10</code>.</p>
+        <div class="dp-lab" id="bin-lab"><h3>Build Pascal's triangle</h3>
+          <div class="dp-controls"><label>n <input id="bin-n" type="number" min="0" max="10" value="5"></label><label>k <input id="bin-k" type="number" min="0" max="10" value="2"></label><button type="button" id="bin-build">New table</button></div>
+          <div id="bin-table"></div><div class="dp-controls"><button type="button" id="bin-step" class="primary">Next cell</button><button type="button" id="bin-all">Complete table</button></div>
+          <p id="bin-status" class="dp-status" role="status"></p>
+        </div>
+        <pre>for i = 0 to n:
+    for j = 0 to min(i,k):
+        if j == 0 or j == i: B[i,j] = 1
+        else: B[i,j] = B[i−1,j−1] + B[i−1,j]
+return B[n,k]</pre>
+        <p class="dp-complexity">O(nk) time and space for k ≥ 1; including k = 0, the loop bound is O((n+1)(k+1)). Each cell uses the previous row, so row-by-row evaluation is valid. A one-dimensional version must update from right to left to preserve previous-row values.</p>
+        <div class="dp-check" data-quiz="binomial"></div>
+        <label class="dp-done"><input type="checkbox" data-complete="binomial">Mark section complete</label>
+      </section>
+
+      <section id="kadane" class="dp-unit">
+        <span class="dp-kicker">04 / A ONE-DIMENSIONAL STATE</span><h2>Maximum contiguous subarray</h2>
+        <p>Given a nonempty array, find a <strong>nonempty, contiguous</strong> subarray of maximum sum. The best subarray ending at position i either extends the best one ending at i−1, or starts at i.</p>
+        <div class="formula">H[1] = A[1]<br>H[i] = max(A[i], H[i−1] + A[i])<br>answer = max H[i]</div>
+        <div class="dp-lab" id="kad-lab"><h3>Extend or start again?</h3>
+          <label class="dp-field">Array (1–20 integers, separated by commas)<input type="text" id="kad-input" value="1, 7, 3, -13, 2, 1, 10, -2, 1, -20" maxlength="180" spellcheck="false"></label>
+          <div class="dp-controls"><button type="button" id="kad-build">Use array</button><button type="button" id="kad-negative">Try all negative</button><button type="button" id="kad-step" class="primary">Next position</button><button type="button" id="kad-all">Finish</button></div>
+          <div id="kad-cells" class="dp-cells"></div><div id="kad-table"></div><p id="kad-status" class="dp-status" role="status"></p>
+        </div>
+        <pre>best = current = A[1]
+start = end = currentStart = 1
+for i = 2 to n:
+    if current &lt; 0:
+        current = A[i]; currentStart = i
+    else: current = current + A[i]
+    if current &gt; best:
+        best = current; start = currentStart; end = i
+return best, start, end</pre>
+        <p class="dp-complexity">O(n) time, O(1) auxiliary space when only the current sum, best sum, and indices are kept. The explorer retains a trace for learning. Initializing from A[1], rather than zero, handles all-negative arrays. On a tie, this implementation keeps the earlier solution it already found.</p>
+        <details><summary>Why does one state per ending position suffice?</summary><p>Any subarray ending at i is either the single element A[i], or a subarray ending at i−1 extended by A[i]. Of all extensions, the best uses H[i−1]. Taking the maximum over all ending positions covers every nonempty subarray.</p></details>
+        <div class="dp-check" data-quiz="kadane"></div>
+        <label class="dp-done"><input type="checkbox" data-complete="kadane">Mark section complete</label>
+      </section>
+
+      <section id="knapsack" class="dp-unit">
+        <span class="dp-kicker">05 / TWO CHOICES PER ITEM</span><h2>0/1 Knapsack: skip or take</h2>
+        <p>Each item has a positive integer weight and a value; take each item at most once. Maximize total value without exceeding capacity C. Unlike <a href="greedy.html">fractional knapsack</a>, taking the highest value-to-weight ratio first is not guaranteed to solve this problem.</p>
+        <p><strong>State:</strong> <code>T[i,B]</code> is the maximum value attainable using only the first i items and capacity B.</p>
+        <div class="formula">T[0,B] = 0; T[i,0] = 0<br>if w[i] &gt; B: T[i,B] = T[i−1,B]<br>otherwise: T[i,B] = max(T[i−1,B], v[i] + T[i−1,B−w[i]])</div>
+        <div class="dp-lab" id="knap-lab"><h3>Pack first. Then inspect the decisions.</h3>
+          <p>Lecture example: capacity 15. Click items to build a packing, then compare it with the DP optimum.</p>
+          <div id="knap-items" class="dp-item-list" aria-label="Knapsack items"></div>
+          <p id="knap-packing" class="dp-status" role="status"></p>
+          <div class="dp-controls"><button type="button" id="knap-check">Check my packing</button><button type="button" id="knap-clear">Clear packing</button></div>
+          <h3>Compute the table</h3><p class="dp-legend"><b>Dark cell:</b> current calculation. <b>Green cells:</b> dependencies. Outlined cells show reconstruction.</p>
+          <div id="knap-table"></div>
+          <div class="dp-controls"><button type="button" id="knap-step" class="primary">Next cell</button><button type="button" id="knap-row">Finish row</button><button type="button" id="knap-all">Complete table</button><button type="button" id="knap-back" disabled>Trace solution</button><button type="button" id="knap-reset">Reset table</button></div>
+          <p id="knap-status" class="dp-status" role="status"></p>
+        </div>
+        <pre>for B = 0 to C: T[0,B] = 0
+for i = 1 to n:
+    T[i,0] = 0
+    for B = 1 to C:
+        T[i,B] = T[i−1,B]
+        if w[i] ≤ B:
+            T[i,B] = max(T[i,B], v[i] + T[i−1,B−w[i]])
+return T[n,C]</pre>
+        <details><summary>Why is the recurrence correct?</summary><p>Every feasible solution either excludes item i or includes it. Excluding it leaves a solution among the first i−1 items with capacity B. Including it contributes v[i] and leaves capacity B−w[i] among the first i−1 items. A better solution to the remaining subproblem would improve the whole packing, so an optimum uses an optimal remaining packing.</p></details>
+        <details><summary>How do we reconstruct the items?</summary><p>Start at T[n,C]. If T[i,B] equals T[i−1,B], skipping i preserves an optimal value. Otherwise take i and reduce B by w[i]. Decrease i in either case. Ties may permit more than one optimal packing; skipping on equality returns one of them. In this example the selected items are G2, G3, G4, G6: weight 15, value 26.</p></details>
+        <div class="dp-note"><strong>Why “pseudopolynomial”?</strong><p>The table takes O(nC) time and space, with O(n) reconstruction. C is a numeric value, while writing it in binary takes Θ(log C) bits. Thus O(nC) is not a polynomial bound in the encoded input length. Value-only DP can use O(C) space by scanning capacities downward for each item.</p></div>
+        <div class="dp-check" data-quiz="knapsack"></div>
+        <label class="dp-done"><input type="checkbox" data-complete="knapsack">Mark section complete</label>
+      </section>
+
+      <section id="matrix" class="dp-unit">
+        <span class="dp-kicker">06 / CHOOSING A SPLIT</span><h2>Matrix-chain multiplication</h2>
+        <p>Matrix multiplication is associative: parenthesization changes the amount of work, while preserving the result and the matrix order. Multiplying a p×q matrix by a q×r matrix costs pqr scalar multiplications in the standard algorithm.</p>
+        <p><strong>State:</strong> <code>m[i,j]</code> is the minimum scalar-multiplication cost for matrices Mi through Mj, where Mi has dimensions <code>d[i−1] × d[i]</code>.</p>
+        <div class="formula">m[i,i] = 0<br>m[i,j] = min over i ≤ k &lt; j of:<br>    m[i,k] + m[k+1,j] + d[i−1] · d[k] · d[j]</div>
+        <div class="dp-lab" id="matrix-lab"><h3>Compare the possible final splits</h3>
+          <p>Lecture example: M1 = 2×5, M2 = 5×3, M3 = 3×4.</p>
+          <label class="dp-field">Dimension vector (3–7 positive integers)<input type="text" id="matrix-input" value="2, 5, 3, 4" maxlength="70" spellcheck="false"></label>
+          <div class="dp-controls"><button type="button" id="matrix-build">Use dimensions</button><button type="button" id="matrix-step" class="primary">Next subchain</button><button type="button" id="matrix-all">Complete tables</button><button type="button" id="matrix-reset">Restart</button></div>
+          <div id="matrix-table"></div><div id="split-table"></div><p id="matrix-status" class="dp-status" role="status"></p>
+        </div>
+        <pre>for i = 1 to n: m[i,i] = 0
+for len = 2 to n:
+    for i = 1 to n−len+1:
+        j = i+len−1; m[i,j] = ∞
+        for k = i to j−1:
+            q = m[i,k] + m[k+1,j] + d[i−1]*d[k]*d[j]
+            if q &lt; m[i,j]: m[i,j] = q; S[i,j] = k</pre>
+        <p class="dp-complexity">O(n²) states, O(n) candidate splits per state: O(n³) time and O(n²) space. Fill by increasing chain length. Recover the parenthesization by recursively following S; the reconstruction tree has O(n) nodes.</p>
+        <details><summary>Worked comparison and correctness</summary><p>M1(M2M3) costs 5×3×4 + 2×5×4 = 100. (M1M2)M3 costs 2×5×3 + 2×3×4 = 54. Every full parenthesization has a final split k. For that split, its two subchains must themselves be optimal; otherwise replacing one improves the total. Trying all splits therefore finds an optimum.</p></details>
+        <div class="dp-check" data-quiz="matrix"></div>
+        <label class="dp-done"><input type="checkbox" data-complete="matrix">Mark section complete</label>
+      </section>
+
+      <section id="lcs" class="dp-unit">
+        <span class="dp-kicker">07 / VALUE AND WITNESS</span><h2>Longest common subsequence</h2>
+        <p>A subsequence preserves character order but may skip characters. Find a longest subsequence common to two strings. Its characters need not be contiguous.</p>
+        <p><strong>State:</strong> <code>f[i,j]</code> is the LCS length of the first i characters of X and the first j characters of Y.</p>
+        <div class="formula">f[0,j] = f[i,0] = 0<br>if X[i−1] == Y[j−1]: f[i,j] = 1 + f[i−1,j−1]<br>otherwise: f[i,j] = max(f[i−1,j], f[i,j−1])</div>
+        <div class="dp-lab" id="lcs-lab"><h3>Find the length. Recover a sequence.</h3>
+          <div class="dp-fields"><label class="dp-field">String X (up to 12 letters)<input type="text" id="lcs-x" value="ABCBDAB" maxlength="12" spellcheck="false"></label><label class="dp-field">String Y (up to 12 letters)<input type="text" id="lcs-y" value="BDCABA" maxlength="12" spellcheck="false"></label></div>
+          <div class="dp-controls"><button type="button" id="lcs-build">Use strings</button><button type="button" id="lcs-example">Other lecture example</button><button type="button" id="lcs-step" class="primary">Next cell</button><button type="button" id="lcs-all">Complete table</button><button type="button" id="lcs-back" disabled>Trace a solution</button></div>
+          <div id="lcs-table"></div><p id="lcs-status" class="dp-status" role="status"></p>
+          <label class="dp-field">Your proposed LCS (case-sensitive)<input type="text" id="lcs-answer" maxlength="12" autocomplete="off" spellcheck="false"></label><button type="button" id="lcs-check">Check my subsequence</button><p id="lcs-verdict" class="dp-status" role="status"></p>
+        </div>
+        <pre>for i = 0 to n: f[i,0] = 0
+for j = 0 to m: f[0,j] = 0
+for i = 1 to n:
+    for j = 1 to m:
+        if X[i−1] == Y[j−1]: f[i,j] = 1 + f[i−1,j−1]
+        else: f[i,j] = max(f[i−1,j], f[i,j−1])</pre>
+        <details><summary>Why does the recurrence cover every case?</summary><p>If the final characters match, an LCS can end with that character; removing it leaves an LCS of the two shorter prefixes. If the final characters differ, a common subsequence must omit at least one of them. Taking the better of the two shorter-prefix states covers those alternatives.</p></details>
+        <details><summary>Reconstruct without copying the answer repeatedly</summary><pre>characters = empty list; i = n; j = m
+while i &gt; 0 and j &gt; 0:
+    if X[i−1] == Y[j−1]:
+        append X[i−1] to characters
+        i = i−1; j = j−1
+    else if f[i−1,j] ≥ f[i,j−1]: i = i−1
+    else: j = j−1
+reverse characters; return join(characters)</pre><p>Following ties upward returns one optimal subsequence. Another tie choice may produce a different equally long answer.</p></details>
+        <p class="dp-complexity">O(nm) time and space for nonempty strings; including empty strings, the allocated table has (n+1)(m+1) cells. Backtracking takes O(n+m) time when collecting characters and reversing once. Two rows suffice for the length alone; retaining the full table supports this reconstruction.</p>
+        <div class="dp-check" data-quiz="lcs"></div>
+        <label class="dp-done"><input type="checkbox" data-complete="lcs">Mark section complete</label>
+      </section>
+
+      <section id="practice" class="dp-unit">
+        <span class="dp-kicker">08 / TRANSFER</span><h2>Design a DP solution yourself</h2>
+        <p><strong>Minimum-cost staircase.</strong> Start at step 0. Each move climbs one or two steps. Entering step i costs c[i]; step 0 is free. Reach step n with minimum total cost. The final step's cost must be paid.</p>
+        <div class="dp-cells" aria-label="Step costs"><div class="dp-cell"><small>Step 1</small>2</div><div class="dp-cell"><small>Step 2</small>3</div><div class="dp-cell"><small>Step 3</small>4</div><div class="dp-cell"><small>Step 4</small>1</div><div class="dp-cell"><small>Step 5</small>5</div></div>
+        <ol><li>Define a state precisely.</li><li>Give the recurrence and base cases.</li><li>Choose a valid evaluation order.</li><li>Compute the minimum cost and recover a path.</li><li>Analyze time and space. What changes if only the cost is required?</li></ol>
+        <div class="dp-lab"><label class="dp-field">Your minimum cost<input id="stairs-answer" type="number" min="0" step="1"></label><button type="button" id="stairs-check">Check cost</button><p class="dp-status" id="stairs-status" role="status"></p></div>
+        <details><summary>Hint 1 · Choose a state</summary><p>Let D[i] be the minimum total cost of reaching step i, including the cost of entering i.</p></details>
+        <details><summary>Hint 2 · Look at the last move</summary><p>The previous step is either i−1 or i−2. Reaching the cheaper predecessor is enough once the last move is fixed.</p></details>
+        <details><summary>Worked solution</summary><div class="formula">D[0] = 0; D[1] = c[1]<br>D[i] = c[i] + min(D[i−1], D[i−2]), for i ≥ 2<br>D[0..5] = [0, 2, 3, 6, 4, 9]</div><p>The minimum is 9 along 0 → 2 → 4 → 5. Save a minimizing predecessor to reconstruct a path. O(n) time, O(n) space with reconstruction; O(1) auxiliary space for the value alone. For n = 0, return 0.</p></details>
+        <div class="dp-check" data-quiz="practice"></div>
+        <label class="dp-done"><input type="checkbox" data-complete="practice">Mark section complete</label>
+      </section>
+
+      <section id="glossary" class="dp-unit"><span class="dp-kicker">REFERENCE</span><h2>Terms to keep close</h2>
+        <dl class="dp-glossary"><dt>Dynamic programming</dt><dd><span lang="he" dir="rtl">תכנון דינמי</span> — solve subproblems and store answers for reuse.</dd>
+        <dt>State / Subproblem</dt><dd><span lang="he" dir="rtl">מצב / תת־בעיה</span> — the precise meaning of an entry.</dd>
+        <dt>Overlapping subproblems</dt><dd><span lang="he" dir="rtl">תת־בעיות חופפות</span> — the same states recur.</dd>
+        <dt>Optimal substructure</dt><dd><span lang="he" dir="rtl">מבנה אופטימלי</span> — optimal solutions contain optimal subsolutions.</dd>
+        <dt>Memoization</dt><dd><span lang="he" dir="rtl">שמירת תוצאות</span> — cache a recursive result after computing it.</dd>
+        <dt>Bottom-up</dt><dd><span lang="he" dir="rtl">מלמטה למעלה</span> — evaluate dependencies before the states that need them.</dd>
+        <dt>Recurrence</dt><dd><span lang="he" dir="rtl">נוסחת נסיגה</span> — express a state through smaller states.</dd>
+        <dt>Reconstruction</dt><dd><span lang="he" dir="rtl">שחזור פתרון</span> — recover decisions from computed values or saved choices.</dd>
+        <dt>Pseudopolynomial</dt><dd><span lang="he" dir="rtl">פסאודו־פולינומי</span> — polynomial in a numeric parameter, but not necessarily in its encoded length.</dd>
+        <dt>Subsequence</dt><dd><span lang="he" dir="rtl">תת־רצף</span> — elements in their original order, with gaps allowed.</dd></dl>
+      </section>
+    </div>
+  </div>
+</main>
+<footer class="container dp-footer"><p><a href="../index.html">← All topics</a> · <a href="greedy.html">Greedy Algorithms</a></p><p>Elina Benenson Opalinsky · Based on lecture slides by Prof. Dana Shapira and Dr Igor Nor.</p></footer>
+</body>
+</html>
